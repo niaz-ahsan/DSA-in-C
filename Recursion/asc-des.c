@@ -7,6 +7,7 @@ will be printed recursively
 
 #include <stdio.h>
 
+// Tail Rec
 void desc_rec(int a) {
     if (a > 0) {
         printf("%d ", a);
@@ -14,6 +15,7 @@ void desc_rec(int a) {
     }
 }
 
+// Head Rec
 void asc_rec(int a) {
     if (a > 0) {
         asc_rec(a-1);
