@@ -7,9 +7,7 @@
 
 // recursive approach O(n)
 int factorial(int n) {
-    if (n == 0) {
-        return 0;
-    } else if (n == 1) {
+    if (n <= 1) {
         return 1;
     } 
     return n * factorial(n-1);
@@ -17,9 +15,6 @@ int factorial(int n) {
 
 // iterative approach O(n)
 int iter_factorial(int n) {
-    if (n == 0) {
-        return 0;
-    }
     int i;
     int output = 1;
     for (i=1; i<=n; i++) {
