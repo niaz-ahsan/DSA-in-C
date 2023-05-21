@@ -5,6 +5,7 @@ Looking for 1+2+3+......+n = ?
 #include <stdio.h>
 #include <stdlib.h>
 
+// recursive approach
 int sum(int n) {
     if (n == 1) {
         return 1;
@@ -12,6 +13,16 @@ int sum(int n) {
         return 0;
     }
     return n + sum(n-1);
+}
+
+//iterative approach
+int iter_sum(int n) {
+    int i;
+    int sum = 0;
+    for (i=1; i<=n; i++) {
+        sum += i;
+    }
+    return sum;
 }
 
 int main(int argc, char *argv[]) {
@@ -24,6 +35,8 @@ int main(int argc, char *argv[]) {
         printf("arg must be +ve\n");
         exit(1);
     }
-    printf("Sum of 1+....+%d = %d\n", n, sum(n));
+    printf("[Recursion] Sum of 1+....+%d = %d\n", n, sum(n));
+    printf("[Iteration] Sum of 1+....+%d = %d\n", n, iter_sum(n));
+
     return 0;
 }
