@@ -10,7 +10,7 @@ n ^ m = ?
 #include <stdio.h>
 #include <stdlib.h>
 
-// recursive approach
+// recursive approach O(m)
 double power_of(int base, int power) {
     if (power == 1) {
         return base;
@@ -20,7 +20,7 @@ double power_of(int base, int power) {
     return (power > 0)? (base * power_of(base, power-1)) : (1 / power_of(base, (-1) * power));
 }
 
-// iterative approach
+// iterative approach O(m)
 double iter_power_of(int base, int power) {
     double output = 1;
     int i;
