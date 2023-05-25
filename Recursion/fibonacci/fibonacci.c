@@ -29,18 +29,54 @@ unsigned long long fib_memoization(int n, unsigned long long * m) {
     return num;
 }
 
+// iterative approach
+void iter_fib(int * series, int n) {
+    series[0] = 0;
+    series[1] = 1;
+    int i;
+    for (i=2; i<=n; i++) {
+        series[i] = series[i-1] + series[i-2];
+    }
+}
+
+void print_array(int * a, int size) {
+    int i;
+    for (i=0; i<=size; i++) {
+        printf("[%d]: %d \n", i, a[i]);
+    }
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         printf("Syntax: <exe> <nth term>\n");
         exit(1);
     }
     int n = atoi(argv[1]); // converting param to int which is the n
+    if (n < 0) {
+        printf("Provide +ve index\n");
+        exit(1);
+    }
+    
+    // execute normal recursive fibonacci
+    printf("Executing Recursive implementation\n");
+    printf("==================================\n");
+    printf("%d\n", fib(n));
+    
+    // execute recursive memoization fibonacci upto 93rd digit
+    printf("Executing Recursive implementation with Memoization\n");
+    printf("===================================================\n");
     unsigned long long memory[n];
     int i;
     for (i=0; i<=n; i++) {
         memory[i] = -1;
     }
-    //printf("%d\n", fib(n));
     printf("%llu\n", fib_memoization(n, memory));
+    
+    //execute fibonacci via iterative approach
+    printf("Executing Iterative implementation\n");
+    printf("==================================\n");
+    int p[n];
+    iter_fib(p, n);
+    print_array(p, n);
     return 0;
 }
