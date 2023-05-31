@@ -1,7 +1,7 @@
 # include <stdio.h>
 
 int main(void) {
-    int a_size, b_size = 5, c_size = 3;
+    int a_size = 5, b_size = 5, c_size = 3;
     int a[5] = {2,3};
     int b[5] = {0};
     int c[] = {1,2,3};
