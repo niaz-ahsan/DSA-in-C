@@ -12,7 +12,8 @@ struct ADT {
 };
 
 int append(struct ADT *, int); 
-int display (struct ADT *);
+int display(struct ADT *);
+int insert(struct ADT *, int, int);
 
 int main(void) {
     // get total size from STDIN
@@ -27,10 +28,11 @@ int main(void) {
     arr.length = 0;
 
     while (1) {
-        int choice;
+        int choice, user_data, insert_index, status;
         printf("\n======================\n");
         printf("1. Display the array\n");
         printf("2. Append to the array\n");
+        printf("3. Insert data at a given index\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
         scanf("%d", &choice);
@@ -38,12 +40,17 @@ int main(void) {
             case 1:
                 display(&arr);
                 break;
-            case 2: 
-                int data;
+            case 2:
                 printf("Int you want to append: \n");
-                scanf("%d", &data);
-                int status = append(&arr, data);
+                scanf("%d", &user_data);
+                status = append(&arr, user_data);
                 (status < 0)? printf("Array is full!\n") : printf("Data appended successfully!\n");
+                break;
+            case 3:
+                printf("Int data & index: \n");
+                scanf("%d%d", &user_data, &insert_index);
+                status = insert(&arr, insert_index, user_data);
+                (status < 0)? printf("Insert failed!\n") : printf("Data inserted successfully!\n");
                 break;
             case 0:
                 free(arr.ptr);
@@ -72,4 +79,22 @@ int display (struct ADT * arr) {
         printf("[%d]:%d ", i, arr->ptr[i]);
     }
     printf("\n");
+}
+
+int insert(struct ADT *arr, int index, int data) {
+    // 0 = success, -1 = no space
+    if (arr->size == arr->length || index < 0 || index > arr->size-1 ) {
+        return -1;
+    } else if (index > arr->length-1) {
+        append(arr, data);
+        arr->length++;
+        return 0;
+    }
+    // shift all data to the right
+    for (int i = arr->length-1; i>=index; i-- ) {
+        arr->ptr[i+1] = arr->ptr[i];
+    }
+    arr->ptr[index] = data;
+    arr->length++;
+    return 0;
 }
