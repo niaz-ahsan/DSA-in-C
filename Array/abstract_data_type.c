@@ -14,6 +14,7 @@ struct ADT {
 int append(struct ADT *, int); 
 int display(struct ADT *);
 int insert(struct ADT *, int, int);
+void length_size(struct ADT *);
 
 int main(void) {
     // get total size from STDIN
@@ -33,6 +34,7 @@ int main(void) {
         printf("1. Display the array\n");
         printf("2. Append to the array\n");
         printf("3. Insert data at a given index\n");
+        printf("4. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
         scanf("%d", &choice);
@@ -51,6 +53,9 @@ int main(void) {
                 scanf("%d%d", &user_data, &insert_index);
                 status = insert(&arr, insert_index, user_data);
                 (status < 0)? printf("Insert failed!\n") : printf("Data inserted successfully!\n");
+                break;
+            case 4:
+                length_size(&arr);
                 break;
             case 0:
                 free(arr.ptr);
@@ -87,7 +92,6 @@ int insert(struct ADT *arr, int index, int data) {
         return -1;
     } else if (index > arr->length-1) {
         append(arr, data);
-        arr->length++;
         return 0;
     }
     // shift all data to the right
@@ -97,4 +101,8 @@ int insert(struct ADT *arr, int index, int data) {
     arr->ptr[index] = data;
     arr->length++;
     return 0;
+}
+
+void length_size(struct ADT *arr) {
+    printf("Size: %d\nLength: %d\n", arr->size, arr->length);
 }
