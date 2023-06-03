@@ -15,6 +15,7 @@ int append(struct ADT *, int);
 int display(struct ADT *);
 int insert(struct ADT *, int, int);
 void length_size(struct ADT *);
+int delete(struct ADT *, int);
 
 int main(void) {
     // get total size from STDIN
@@ -34,7 +35,8 @@ int main(void) {
         printf("1. Display the array\n");
         printf("2. Append to the array\n");
         printf("3. Insert data at a given index\n");
-        printf("4. View Size n Length\n");
+        printf("4. Delete data at a given index\n");
+        printf("9. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
         scanf("%d", &choice);
@@ -55,6 +57,12 @@ int main(void) {
                 (status < 0)? printf("Insert failed!\n") : printf("Data inserted successfully!\n");
                 break;
             case 4:
+                printf("Int index from where you wanna delete data: \n");
+                scanf("%d", &insert_index);
+                status = delete(&arr, insert_index);
+                (status < 0)? printf("Deletion failed!\n") : printf("Data deleted successfully!\n");
+                break;    
+            case 9:
                 length_size(&arr);
                 break;
             case 0:
@@ -69,6 +77,7 @@ int main(void) {
     return 0;
 }
 
+// Time O(1)
 int append(struct ADT * arr, int data) {
     // 0 = success, -1 = no space
     if (arr->size == arr->length) {
@@ -86,6 +95,7 @@ int display (struct ADT * arr) {
     printf("\n");
 }
 
+// Time O(n)
 int insert(struct ADT *arr, int index, int data) {
     // 0 = success, -1 = no space
     if (arr->size == arr->length || index < 0 || index > arr->size-1 ) {
@@ -105,4 +115,33 @@ int insert(struct ADT *arr, int index, int data) {
 
 void length_size(struct ADT *arr) {
     printf("Size: %d\nLength: %d\n", arr->size, arr->length);
+}
+
+int is_valid_index(struct ADT *arr, int index) {
+    // 0 -> valid, -1 -> invalid
+    if (index >= 0 && index <= arr->size-1) {
+        return 0;
+    } 
+    return -1;
+}
+
+int is_valid_index_within_data_limit(struct ADT *arr, int index) {
+    // 0 -> valid, -1 -> invalid
+    if (index >= 0 && index <= arr->length-1) {
+        return 0;
+    } 
+    return -1;
+}
+
+int delete(struct ADT *arr, int index) {
+    // 0 -> success, -1 -> error
+    if (is_valid_index_within_data_limit(arr, index) < 0) {
+        return -1;
+    }
+    for (int i=index; i<=arr->length-1; i++) {
+        arr->ptr[i] = arr->ptr[i+1];
+    }
+    arr->ptr[arr->length-1] = 0;
+    arr->length--;
+    return 0;
 }
