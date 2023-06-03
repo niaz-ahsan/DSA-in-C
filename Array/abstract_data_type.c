@@ -16,6 +16,7 @@ int display(struct ADT *);
 int insert(struct ADT *, int, int);
 void length_size(struct ADT *);
 int delete(struct ADT *, int);
+int linear_search(struct ADT *, int);
 
 int main(void) {
     // get total size from STDIN
@@ -36,6 +37,7 @@ int main(void) {
         printf("2. Append to the array\n");
         printf("3. Insert data at a given index\n");
         printf("4. Delete data at a given index\n");
+        printf("5. Search a data (Linear)\n");
         printf("9. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
@@ -61,7 +63,13 @@ int main(void) {
                 scanf("%d", &insert_index);
                 status = delete(&arr, insert_index);
                 (status < 0)? printf("Deletion failed!\n") : printf("Data deleted successfully!\n");
-                break;    
+                break;  
+            case 5:
+                printf("Which int are you looking for? \n");
+                scanf("%d", &user_data);
+                status = linear_search(&arr, user_data);
+                (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
+                break;  
             case 9:
                 length_size(&arr);
                 break;
@@ -133,6 +141,7 @@ int is_valid_index_within_data_limit(struct ADT *arr, int index) {
     return -1;
 }
 
+// Time O(n)
 int delete(struct ADT *arr, int index) {
     // 0 -> success, -1 -> error
     if (is_valid_index_within_data_limit(arr, index) < 0) {
@@ -144,4 +153,15 @@ int delete(struct ADT *arr, int index) {
     arr->ptr[arr->length-1] = 0;
     arr->length--;
     return 0;
+}
+
+// Time O(n)
+int linear_search(struct ADT *arr, int data) {
+    // int index -> success, -1 -> error
+    for (int i=0; i<arr->length; i++) {
+        if(arr->ptr[i] == data) {
+            return i;
+        }
+    }
+    return -1;
 }
