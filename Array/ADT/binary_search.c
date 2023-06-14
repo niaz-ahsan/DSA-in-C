@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+// Time O(logn)
 int search(int * ptr, int low, int high, int data) {
     int mid;
     int hops = 0; // to see # of iteration
@@ -16,7 +17,7 @@ int search(int * ptr, int low, int high, int data) {
             high = mid - 1;
         }
     }
-    
+
     printf("Total hops: %d\n", hops);
     if (found) {
         return mid;
