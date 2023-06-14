@@ -5,9 +5,10 @@ Abstract Data Type using Array
 #include <stdio.h>
 #include <stdlib.h>
 #include "./quicksort.h"
+#include "./binary_search.h"
 
 struct ADT {
-    int *ptr;
+    int *ptr; // points at array of int data
     int size; // total size of the array
     int length; // how many data already there
 };
@@ -33,13 +34,15 @@ int main(void) {
 
     while (1) {
         int choice, user_data, insert_index, status;
+        char to_continue;
         printf("\n======================\n");
         printf("1. Display the array\n");
         printf("2. Append to the array\n");
         printf("3. Insert data at a given index\n");
         printf("4. Delete data at a given index\n");
-        printf("5. Search a data (Linear)\n");
-        printf("6. Sort the data\n");
+        printf("5. Sort the data\n");
+        printf("6. Search a data (Linear)\n");
+        printf("7. Search a data (Binary)\n");
         printf("9. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
@@ -67,14 +70,22 @@ int main(void) {
                 (status < 0)? printf("Deletion failed!\n") : printf("Data deleted successfully!\n");
                 break;  
             case 5:
+                quicksort(arr.ptr, 0, arr.length-1); 
+                break;
+            case 6:
                 printf("Which int are you looking for? \n");
                 scanf("%d", &user_data);
                 status = linear_search(&arr, user_data);
                 (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
+                break;     
+            case 7:
+                printf("This will sort the data from smallest to largest (Ascending order)\n");
+                printf("Which int are you looking for?\n");
+                scanf("%d", &user_data);
+                quicksort(arr.ptr, 0, arr.length-1);
+                status = search(arr.ptr, 0, arr.length-1, user_data);
+                (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
                 break; 
-            case 6:
-                quicksort(arr.ptr, 0, arr.length-1); 
-                break;
             case 9:
                 length_size(&arr);
                 break;
@@ -86,7 +97,6 @@ int main(void) {
                 break;   
         }
     }
-
     return 0;
 }
 
@@ -170,3 +180,4 @@ int linear_search(struct ADT *arr, int data) {
     }
     return -1;
 }
+

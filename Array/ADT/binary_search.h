@@ -1,0 +1,1 @@
+int search(int *, int, int, int);

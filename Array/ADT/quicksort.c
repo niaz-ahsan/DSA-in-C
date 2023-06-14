@@ -4,6 +4,7 @@ void quicksort(int *arr, int low, int high);
 int partition(int *arr, int low, int high);
 void swap(int *a, int *b);
 
+// Time O(nlogn)
 void quicksort(int *arr, int low, int high) {
 	if (low < high) {
 		int pivot_location = partition(arr, low, high);
