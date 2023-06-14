@@ -42,7 +42,8 @@ int main(void) {
         printf("4. Delete data at a given index\n");
         printf("5. Sort the data\n");
         printf("6. Search a data (Linear)\n");
-        printf("7. Search a data (Binary)\n");
+        printf("7. Search a data (Binary Iterative)\n");
+        printf("8. Search a data (Binary Recursive)\n");
         printf("9. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
@@ -86,6 +87,14 @@ int main(void) {
                 status = search(arr.ptr, 0, arr.length-1, user_data);
                 (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
                 break; 
+            case 8:
+                printf("This will sort the data from smallest to largest (Ascending order)\n");
+                printf("Which int are you looking for?\n");
+                scanf("%d", &user_data);
+                quicksort(arr.ptr, 0, arr.length-1);
+                status = rec_search(arr.ptr, 0, arr.length-1, user_data);
+                (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
+                break;     
             case 9:
                 length_size(&arr);
                 break;
