@@ -4,6 +4,7 @@ Abstract Data Type using Array
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "./quicksort.h"
 
 struct ADT {
     int *ptr;
@@ -38,6 +39,7 @@ int main(void) {
         printf("3. Insert data at a given index\n");
         printf("4. Delete data at a given index\n");
         printf("5. Search a data (Linear)\n");
+        printf("6. Sort the data\n");
         printf("9. View Size n Length\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
@@ -69,7 +71,10 @@ int main(void) {
                 scanf("%d", &user_data);
                 status = linear_search(&arr, user_data);
                 (status < 0)? printf("[%d] Not Found!\n", user_data) : printf("[%d] Found @ Index: [%d]\n", user_data, status);
-                break;  
+                break; 
+            case 6:
+                quicksort(arr.ptr, 0, arr.length-1); 
+                break;
             case 9:
                 length_size(&arr);
                 break;
