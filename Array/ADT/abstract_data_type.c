@@ -19,6 +19,7 @@ int insert(struct ADT *, int, int);
 void length_size(struct ADT *);
 int delete(struct ADT *, int);
 int linear_search(struct ADT *, int);
+void reverse(struct ADT *);
 
 int main(void) {
     // get total size from STDIN
@@ -45,6 +46,7 @@ int main(void) {
         printf("7. Search a data (Binary Iterative)\n");
         printf("8. Search a data (Binary Recursive)\n");
         printf("9. View Size n Length\n");
+        printf("10. Reverse the whole thing\n");
         printf("0. Exit\n\n");
         printf("Enter your choice: \n");
         scanf("%d", &choice);
@@ -97,6 +99,9 @@ int main(void) {
                 break;     
             case 9:
                 length_size(&arr);
+                break;
+            case 10:
+                reverse(&arr);
                 break;
             case 0:
                 free(arr.ptr);
@@ -188,5 +193,17 @@ int linear_search(struct ADT *arr, int data) {
         }
     }
     return -1;
+}
+
+void reverse(struct ADT * arr) {
+    int low = 0;
+    int high = arr->length-1;
+    while (low < high) {
+        int temp = arr->ptr[low];
+        arr->ptr[low] = arr->ptr[high];
+        arr->ptr[high] = temp;
+        low++;
+        high--;
+    }
 }
 
