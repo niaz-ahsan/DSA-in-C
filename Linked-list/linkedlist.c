@@ -14,6 +14,7 @@ struct Node *tail = NULL;
 void generate_list(int * arr, int size);
 void display_list();
 void push(int);
+struct Node * search(int);
 
 int main(void) {
     int arr[] = {3, 5, -1, 2, 1000, -99};
@@ -21,6 +22,8 @@ int main(void) {
     push(420);
     push(923);
     display_list();
+    (search(420))? printf("420 Found!\n") : printf("420 Not Found!\n");
+    (search(1))? printf("1 Found!\n") : printf("1 Not Found!\n");
     return 0;
 }
 
@@ -61,4 +64,15 @@ void push(int data) {
     }     
     int arr[] = {data};
     generate_list(arr, 1);
+}
+
+struct Node * search(int data) {
+    struct Node * current = head;
+    while (current != NULL) {
+        if (current->data == data) {
+            return current;
+        }
+        current = current->next;
+    }
+    return NULL;
 }
