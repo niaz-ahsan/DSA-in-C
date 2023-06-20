@@ -18,6 +18,7 @@ void push(int);
 void insert(int data, int position);
 struct Node * search(int);
 void delete(int);
+void reverse();
 
 int main(void) {
     int arr[] = {3, 5, -1, 2, 1000, -99};
@@ -33,6 +34,8 @@ int main(void) {
     push(923);
     display_list();
     delete(1);
+    display_list();
+    reverse();
     display_list();
     (search(420))? printf("420 Found!\n") : printf("420 Not Found!\n");
     (search(1))? printf("1 Found!\n") : printf("1 Not Found!\n");
@@ -125,7 +128,6 @@ void insert(int data, int position) {
             current = current->next;
             index++;
         }
-        //printf("index: %d\n", index);
         if (index == position && current) {
             // expected
             struct Node * next = current->next;
@@ -172,4 +174,22 @@ void delete(int position) {
         current = current->next;
     }
     delete_node(current, current->next);
+}
+
+void reverse() {
+    struct Node * prev = NULL;
+    struct Node * current = head;
+    struct Node * next = head->next;
+    for (int i=0; i<length; i++) {
+        if (i==0) {
+            tail = current;
+        }
+        current->next = prev;
+        prev = current;
+        current = next;
+        if (next) {
+            next = next->next;
+        }
+    }
+    head = prev;
 }
