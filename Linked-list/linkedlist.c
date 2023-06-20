@@ -14,11 +14,19 @@ struct Node *tail = NULL;
 void generate_list(int * arr, int size);
 void display_list();
 void push(int);
+void insert(int data, int position);
 struct Node * search(int);
 
 int main(void) {
     int arr[] = {3, 5, -1, 2, 1000, -99};
     generate_list(arr, 6);
+    //display_list();
+    insert(-69, 0);
+    display_list(); 
+    insert(-69, 2);
+    display_list();
+    insert(-69, 9);
+    display_list();
     push(420);
     push(923);
     display_list();
@@ -75,4 +83,51 @@ struct Node * search(int data) {
         current = current->next;
     }
     return NULL;
+}
+
+void insert(int data, int position) {
+    // In LL considering 1st Node is index 1, 2nd in index 2, ...
+    /*
+    position 0 - head node
+    position 1 - add after node 1
+    position 2 - add after node 2
+    ...
+    */
+    struct Node * new_node = (struct Node *) malloc(sizeof(struct Node));
+    new_node->data = data;
+    new_node->next = NULL;
+    if (position == 0) {
+        if (head) {
+            new_node->next = head;
+            head = new_node;
+            return;
+        }
+        head = new_node;
+        tail = new_node;
+        return;
+    }
+    int index = 1;
+    struct Node * current = head;
+    if (current) {
+        // LL exists and position > 0 
+        while (index < position && current != NULL) {
+            current = current->next;
+            index++;
+        }
+        //printf("index: %d\n", index);
+        if (index == position && current) {
+            // expected
+            struct Node * next = current->next;
+            current->next = new_node;
+            new_node->next = next;
+        } else {
+            // LL ended before that position reached, hence call push()
+            tail->next = new_node;
+            tail = new_node;
+        }
+    } else {
+        // LL doesn't exist and position > 0 ... abnormal. Hence put it in the head (position 0)
+        head = new_node;
+        tail = new_node;
+    }
 }
