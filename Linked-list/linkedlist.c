@@ -19,6 +19,7 @@ void insert(int data, int position);
 struct Node * search(int);
 void delete(int);
 void reverse();
+void free_list();
 
 int main(void) {
     int arr[] = {3, 5, -1, 2, 1000, -99};
@@ -39,6 +40,8 @@ int main(void) {
     display_list();
     (search(420))? printf("420 Found!\n") : printf("420 Not Found!\n");
     (search(1))? printf("1 Found!\n") : printf("1 Not Found!\n");
+    free_list();
+    display_list();
     return 0;
 }
 
@@ -192,4 +195,17 @@ void reverse() {
         }
     }
     head = prev;
+}
+
+void free_list() {
+    struct Node * node = head;
+    struct Node * temp = NULL;
+    while (node != NULL) {
+        temp = node->next;
+        free(node);
+        node = temp;
+    }
+    head = NULL;
+    tail = NULL;
+    length = 0;
 }
