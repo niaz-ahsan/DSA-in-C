@@ -9,6 +9,7 @@ struct Node {
 // global var
 struct Node *head = NULL;
 struct Node *tail = NULL;
+int length = 0;
 
 // func prototypes
 void generate_list(int * arr, int size);
@@ -16,19 +17,22 @@ void display_list();
 void push(int);
 void insert(int data, int position);
 struct Node * search(int);
+void delete(int);
 
 int main(void) {
     int arr[] = {3, 5, -1, 2, 1000, -99};
     generate_list(arr, 6);
     //display_list();
     insert(-69, 0);
-    display_list(); 
+    //display_list(); 
     insert(-69, 2);
-    display_list();
+    //display_list();
     insert(-69, 9);
-    display_list();
+    //display_list();
     push(420);
     push(923);
+    display_list();
+    delete(1);
     display_list();
     (search(420))? printf("420 Found!\n") : printf("420 Not Found!\n");
     (search(1))? printf("1 Found!\n") : printf("1 Not Found!\n");
@@ -49,16 +53,20 @@ void generate_list(int * arr, int size) {
             tail->next = current;
             tail = current;
         }
+        length = size;
     } 
 }
 
 void display_list() {
     struct Node * current = head;
+    printf("========================================\n");
+    printf("Length: %d\n", length);
     while(current != NULL) {
         printf("%d --> ", current->data);
         current = current->next;
     }
     printf("NULL\n");
+    printf("========================================\n");
 }
 
 void push(int data) {
@@ -68,6 +76,7 @@ void push(int data) {
         current->next = NULL;
         tail->next = current;
         tail = current;
+        length++;
         return;
     }     
     int arr[] = {data};
@@ -100,10 +109,12 @@ void insert(int data, int position) {
         if (head) {
             new_node->next = head;
             head = new_node;
+            length++;
             return;
         }
         head = new_node;
         tail = new_node;
+        length++;
         return;
     }
     int index = 1;
@@ -130,4 +141,35 @@ void insert(int data, int position) {
         head = new_node;
         tail = new_node;
     }
+    length++;
+}
+
+void delete_node(struct Node * prev, struct Node * node) {
+    if (node == head) {
+        head = head->next;
+        free(node);
+    } else {
+        prev->next = node->next;
+        if(node == tail) {
+            tail = prev;
+        }
+        free(node);
+    }
+    length--;
+}
+
+void delete(int position) {
+    // In LL considering 1st Node is index 1, 2nd in index 2, ... and that's what we'll be deleting
+    if (position < 1 || position > length ) {
+        return;
+    }
+    if (position == 1) {
+        delete_node(NULL, head);
+        return;
+    }   
+    struct Node * current = head;
+    for (int i=0; i<position-2; i++) {
+        current = current->next;
+    }
+    delete_node(current, current->next);
 }
