@@ -11,6 +11,7 @@ void init_stack(struct stack *);
 void push(int, struct stack *);
 void display(struct stack *);
 int pop(struct stack *);
+int peek(struct stack *, int);
 
 int main(void) {
     struct stack st;
@@ -24,6 +25,9 @@ int main(void) {
     push(2, &st);
     push(1, &st);
     display(&st);
+    printf("Peeking at pos 3: %d\n", peek(&st, 3));
+    printf("Peeking at pos 1: %d\n", peek(&st, 1));
+    printf("Peeking at pos 6: %d\n", peek(&st, 6));
     pop(&st);
     pop(&st);
     display(&st);
@@ -51,12 +55,25 @@ int pop(struct stack *st) {
     int ret = -1;
     if(st->top == -1) {
         // stack empty
-        printf("Stack is empty. Pop failed");
+        printf("Stack is empty. Pop failed\n");
         return ret;
     }
     ret = st->start[st->top];
     st->top--;
     return ret;
+}
+
+int peek(struct stack *st, int pos) {
+    /*
+    pos 1 --> top elem
+    pos 2 --> 2nd top elem
+    ...
+    */
+    if (pos > st->top + 1 || pos < 1) {
+        printf("Invalid index provided\n");
+        return -1;
+    }
+    return st->start[st->top + 1 - pos];
 }
 
 void display(struct stack *st) {
