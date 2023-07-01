@@ -10,6 +10,7 @@ struct stack {
 void init_stack(struct stack *);
 void push(int, struct stack *);
 void display(struct stack *);
+int pop(struct stack *);
 
 int main(void) {
     struct stack st;
@@ -20,9 +21,15 @@ int main(void) {
     init_stack(&st);
     push(5, &st);
     push(3, &st);
-    //push(2);
-    push(-1, &st);
+    push(2, &st);
+    push(1, &st);
     display(&st);
+    pop(&st);
+    pop(&st);
+    display(&st);
+
+    //end of operation
+    free(st.start);
 }
 
 void init_stack(struct stack *st) {
@@ -33,11 +40,23 @@ void init_stack(struct stack *st) {
 void push(int data, struct stack * st) {
     if (st->top == st->size - 1) {
         // stack is full
-        printf("Stack is full! Insert failed!\n");
+        printf("Stack is full! Push failed!\n");
         return;
     }
     st->top++;
     st->start[st->top] = data;
+}
+
+int pop(struct stack *st) {
+    int ret = -1;
+    if(st->top == -1) {
+        // stack empty
+        printf("Stack is empty. Pop failed");
+        return ret;
+    }
+    ret = st->start[st->top];
+    st->top--;
+    return ret;
 }
 
 void display(struct stack *st) {
@@ -47,5 +66,5 @@ void display(struct stack *st) {
         printf("[%d]: %d\n", i, st->start[i]);
     }
     printf("top pointing at: %d\n", st->top);
-    printf("================================================\n");
+    printf("================End Display=====================\n");
 }
