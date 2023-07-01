@@ -12,9 +12,10 @@ struct Stack {
     struct Node * start; // the right most Node (tail)
 };
 
+void init_stack(struct Stack *);
 void push(int, struct Stack *);
 int pop(struct Stack *);
-void init_stack(struct Stack *);
+int peek(struct Stack *, int);
 void display(struct Stack *);
 void free_st(struct Stack *);
 
@@ -26,11 +27,32 @@ int main(void) {
     push(4, &st);
     push(3, &st);
     display(&st);
+    // peeking
+    printf("Peek: pos 3: %d\n", peek(&st, 3));
+    printf("Peek: pos 2: %d\n", peek(&st, 2));
+    printf("Peek: pos 1: %d\n", peek(&st, 1));
+    printf("Peek: pos 0: %d\n", peek(&st, 0));
+    printf("Peek: pos 4: %d\n", peek(&st, 4));
+
     pop(&st);
     pop(&st);
     display(&st);
+    // peeking again
+    printf("Peek: pos 3: %d\n", peek(&st, 3));
+    printf("Peek: pos 2: %d\n", peek(&st, 2));
+    printf("Peek: pos 1: %d\n", peek(&st, 1));
+    printf("Peek: pos 0: %d\n", peek(&st, 0));
+    printf("Peek: pos 4: %d\n", peek(&st, 4));
     pop(&st);
     display(&st);
+
+    // peeking again
+    // peeking again
+    printf("Peek: pos 3: %d\n", peek(&st, 3));
+    printf("Peek: pos 2: %d\n", peek(&st, 2));
+    printf("Peek: pos 1: %d\n", peek(&st, 1));
+    printf("Peek: pos 0: %d\n", peek(&st, 0));
+    printf("Peek: pos 4: %d\n", peek(&st, 4));
 
     // at the end of operation
     free_st(&st);
@@ -73,6 +95,26 @@ int pop(struct Stack * st) {
     int ret = current->data;
     free(current);
     st->len--;
+    return ret;
+}
+
+int peek(struct Stack * st, int pos) {
+    /*
+    pos 1 --> top elem
+    pos 2 --> 2nd top elem
+    ...
+    */
+    if (pos < 1 || pos > st->len) {
+        printf("peek: Invalid position provided\n");
+        return -1;
+    }
+    struct Node * current = st->top;
+    int i = 1;
+    while(i < pos) {
+        current = current->next;
+        i++;
+    }
+    int ret = current->data;
     return ret;
 }
 
