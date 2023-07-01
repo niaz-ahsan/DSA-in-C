@@ -43,6 +43,11 @@ void init_stack(struct Stack * st) {
 
 void push(int data, struct Stack * st) {
     struct Node * node = (struct Node *) malloc(sizeof(struct Node));
+    if (node == NULL) {
+        // Heap memory is full
+        printf("No space in Heap\n");
+        return;
+    }
     node->data = data;
     if (st->top == NULL) {
         // stack is empty
