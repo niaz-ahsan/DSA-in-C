@@ -1,3 +1,7 @@
+/*
+Parentheses match check - only works with '{' & '}'
+<exe> <expressions separated by whitespace e.g. ./a.out {{{}}} {{a+b}-{x-y}}}}> 
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
