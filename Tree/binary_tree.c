@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct Node {
     char * data; // considering tree would have char
@@ -9,7 +10,13 @@ struct Node {
 
 struct Q_node {
     struct Node * tree_node;
+    int index; // for exploring the argv array, handling user input
     struct Q_node * next;
+};
+
+struct Q_return_node {
+    struct Node * tree_node;
+    int index;
 };
 
 struct Queue {
@@ -19,8 +26,8 @@ struct Queue {
 };
 
 void init_queue(struct Queue * q);
-void enqueue(struct Queue * q, struct Node * data);
-struct Node * dequeue(struct Queue * q); 
+void enqueue(struct Queue * q, struct Node * data, int index);
+struct Q_return_node * dequeue(struct Queue * q); 
 void display(struct Queue * q);
 
 int main(int argc, char *argv[]) {
@@ -30,17 +37,58 @@ int main(int argc, char *argv[]) {
     }
     struct Queue q;
     init_queue(&q);
-    for (int i=1; i<argc; i++) {
-        // looping through chars 
-        char * data = argv[i];
-        printf("%s\n", data);
+    
+    char * node_data = argv[1];
+    if (strcmp(node_data, "null") == 0) {
+        // null provided, code later
+        printf("Root can't be NULL, fix it!\n");
+        return 0;
     }
-
+    // create the node in the memory
+    struct Node * node = (struct Node *) malloc(sizeof(struct Node));
+    node->data = node_data;
+    node->left_child = NULL;
+    node->right_child = NULL;
+    // enqueue the node
+    enqueue(&q, node, 1);
+    display(&q);
+    while (q.len) {
+        struct Q_return_node * p = dequeue(&q);
+        int this_index = p->index;
+        struct Node * node = p->tree_node;
+        int left_child_index = this_index * 2;
+        int right_child_index = (this_index * 2) + 1;
+        if (left_child_index <= argc) {
+            // left child exists in the argv size
+            if (strcmp(argv[left_child_index - 1], "null") != 0) {
+                // argv data isn't null
+                struct Node * left_child_node = (struct Node *) malloc(sizeof(struct Node));
+                left_child_node->data = argv[left_child_index - 1];
+                left_child_node->left_child = NULL;
+                left_child_node->right_child = NULL;
+                enqueue(&q, left_child_node, left_child_index);
+            }
+        }
+        display(&q);
+        if (right_child_index <= argc) {
+            // right child exists in the argv size
+            if (strcmp(argv[right_child_index - 1], "null") != 0) {
+                // argv data isn't null
+                struct Node * right_child_node = (struct Node *) malloc(sizeof(struct Node));
+                right_child_node->data = argv[right_child_index - 1];
+                right_child_node->left_child = NULL;
+                right_child_node->right_child = NULL;
+                enqueue(&q, right_child_node, right_child_index);
+            }
+        }
+        display(&q);
+    }
+    
     return 0;
 }
 
 
-// ################### Queue related functions ##########################
+// ################### Queue related functions BEGIN ##########################
 
 void init_queue(struct Queue * q) {
     q->len = 0;
@@ -48,7 +96,7 @@ void init_queue(struct Queue * q) {
     q->last = NULL;
 }
 
-void enqueue(struct Queue * q, struct Node * data) {
+void enqueue(struct Queue * q, struct Node * data, int index) {
     struct Q_node * node = (struct Q_node *) malloc(sizeof(struct Q_node));
     if (node == NULL) {
         // Heap memory is full
@@ -56,6 +104,7 @@ void enqueue(struct Queue * q, struct Node * data) {
         return;
     } 
     node->tree_node = data;
+    node->index = index;
     node->next = NULL;
     if(q->first == NULL) {
         // q is empty
@@ -69,18 +118,22 @@ void enqueue(struct Queue * q, struct Node * data) {
     q->len++;
 }
 
-struct Node * dequeue(struct Queue * q) {
+struct Q_return_node * dequeue(struct Queue * q) {
     // -1 if q is empty, data otherwise
     if (q->first == NULL) {
         // q is empty
         printf("Queue is empty!\n");
         return NULL;
     }
-    struct Node * ret = q->first->tree_node;
+    struct Node * tree_node = q->first->tree_node;
     struct Q_node * to_be_deleted = q->first;
+    int index = to_be_deleted->index;
     q->first = q->first->next;
     free(to_be_deleted);
     q->len--;
+    struct Q_return_node * ret = (struct Q_return_node *) malloc(sizeof(struct Q_return_node));
+    ret->index = index;
+    ret->tree_node = tree_node;
     return ret;
 }
 
@@ -99,3 +152,5 @@ void display(struct Queue * q) {
     }
     printf("================ QUEUE DISPLAY END ================\n");
 }
+
+// ################### Queue related functions END ##########################
