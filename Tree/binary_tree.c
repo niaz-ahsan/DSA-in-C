@@ -8,6 +8,10 @@ struct Node {
     struct tree_node * right_child;
 };
 
+struct Tree {
+    struct Node * root;
+};
+
 struct Q_node {
     struct Node * tree_node;
     int index; // for exploring the argv array, handling user input
@@ -25,6 +29,7 @@ struct Queue {
     struct Q_node * last;
 };
 
+void display_tree(struct Tree *);
 void init_queue(struct Queue * q);
 void enqueue(struct Queue * q, struct Node * data, int index);
 struct Q_return_node * dequeue(struct Queue * q); 
@@ -44,6 +49,7 @@ int main(int argc, char *argv[]) {
         printf("Root can't be NULL, fix it!\n");
         return 0;
     }
+    struct Tree tree;
     // create the node in the memory
     struct Node * node = (struct Node *) malloc(sizeof(struct Node));
     node->data = node_data;
@@ -51,7 +57,8 @@ int main(int argc, char *argv[]) {
     node->right_child = NULL;
     // enqueue the node
     enqueue(&q, node, 1);
-    display(&q);
+    tree.root = node;
+    //display(&q);
     while (q.len) {
         struct Q_return_node * p = dequeue(&q);
         int this_index = p->index;
@@ -69,7 +76,7 @@ int main(int argc, char *argv[]) {
                 enqueue(&q, left_child_node, left_child_index);
             }
         }
-        display(&q);
+        //display(&q);
         if (right_child_index <= argc) {
             // right child exists in the argv size
             if (strcmp(argv[right_child_index - 1], "null") != 0) {
@@ -81,12 +88,16 @@ int main(int argc, char *argv[]) {
                 enqueue(&q, right_child_node, right_child_index);
             }
         }
-        display(&q);
+        //display(&q);
     }
     
+    display_tree(&tree);
     return 0;
 }
 
+void display_tree(struct Tree * tree) {
+    // Design the display
+}
 
 // ################### Queue related functions BEGIN ##########################
 
