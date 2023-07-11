@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 struct Node {
-    int data; // considering tree would have int
+    char * data; // considering tree would have char
     struct tree_node * left_child;
     struct tree_node * right_child;
 };
@@ -21,6 +21,7 @@ struct Queue {
 void init_queue(struct Queue * q);
 void enqueue(struct Queue * q, struct Node * data);
 struct Node * dequeue(struct Queue * q); 
+void display(struct Queue * q);
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -29,6 +30,11 @@ int main(int argc, char *argv[]) {
     }
     struct Queue q;
     init_queue(&q);
+    for (int i=1; i<argc; i++) {
+        // looping through chars 
+        char * data = argv[i];
+        printf("%s\n", data);
+    }
 
     return 0;
 }
@@ -43,7 +49,7 @@ void init_queue(struct Queue * q) {
 }
 
 void enqueue(struct Queue * q, struct Node * data) {
-    struct Q_node * node = (struct Node *) malloc(sizeof(struct Q_node));
+    struct Q_node * node = (struct Q_node *) malloc(sizeof(struct Q_node));
     if (node == NULL) {
         // Heap memory is full
         printf("No more space at Heap\n");
@@ -68,12 +74,28 @@ struct Node * dequeue(struct Queue * q) {
     if (q->first == NULL) {
         // q is empty
         printf("Queue is empty!\n");
-        return -1;
+        return NULL;
     }
     struct Node * ret = q->first->tree_node;
-    struct Node * to_be_deleted = q->first;
+    struct Q_node * to_be_deleted = q->first;
     q->first = q->first->next;
     free(to_be_deleted);
     q->len--;
     return ret;
+}
+
+void display(struct Queue * q) {
+    printf("=============== QUEUE DISPLAY START ===============\n");
+    printf("Length: %d\n", q->len);
+    struct Q_node * current = q->first;
+    while(current != NULL) {
+        printf("%s -->", current->tree_node->data);
+        current = current->next;
+    }
+    printf("\n");
+    if(q->len) {
+        printf("[first] pointing at: %s\n", q->first->tree_node->data);
+        printf("[last] pointing at: %s\n", q->last->tree_node->data);
+    }
+    printf("================ QUEUE DISPLAY END ================\n");
 }
