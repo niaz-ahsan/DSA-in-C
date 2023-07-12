@@ -112,7 +112,9 @@ int main(int argc, char *argv[]) {
     printf("\nPostorder Traversal: ");
     postorder_rec(root);
     printf("\n");
+    printf("=============== Iterative approach begin ===============\n");
     preorder_it(root, argc - 1);
+    printf("\n");
     return 0;
 }
 
@@ -127,6 +129,7 @@ void preorder_rec(struct Node * node) {
 }
 
 void preorder_it(struct Node * root, int size) {
+    printf("Preorder Traversal (iterative): ");
     struct Stack st;
     st.end = -1;
     st.len = 0;
@@ -134,7 +137,7 @@ void preorder_it(struct Node * root, int size) {
     push(&st, root);
     while (st.len) {
         struct Node * p = pop(&st);
-        printf("%s\n", p->data);
+        printf(" %s ", p->data);
         if (p->right_child) {
             push(&st, p->right_child);
         }
