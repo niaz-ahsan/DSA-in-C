@@ -4,12 +4,8 @@
 
 struct Node {
     char * data; // considering tree would have char
-    struct tree_node * left_child;
-    struct tree_node * right_child;
-};
-
-struct Tree {
-    struct Node * root;
+    struct Node * left_child;
+    struct Node * right_child;
 };
 
 struct Q_node {
@@ -29,7 +25,7 @@ struct Queue {
     struct Q_node * last;
 };
 
-void display_tree(struct Tree *);
+void display_tree(struct Node *, int);
 void init_queue(struct Queue * q);
 void enqueue(struct Queue * q, struct Node * data, int index);
 struct Q_return_node * dequeue(struct Queue * q); 
@@ -49,7 +45,6 @@ int main(int argc, char *argv[]) {
         printf("Root can't be NULL, fix it!\n");
         return 0;
     }
-    struct Tree tree;
     // create the node in the memory
     struct Node * node = (struct Node *) malloc(sizeof(struct Node));
     node->data = node_data;
@@ -57,7 +52,7 @@ int main(int argc, char *argv[]) {
     node->right_child = NULL;
     // enqueue the node
     enqueue(&q, node, 1);
-    tree.root = node;
+    struct Node * root = node;
     //display(&q);
     while (q.len) {
         struct Q_return_node * p = dequeue(&q);
@@ -65,38 +60,63 @@ int main(int argc, char *argv[]) {
         struct Node * node = p->tree_node;
         int left_child_index = this_index * 2;
         int right_child_index = (this_index * 2) + 1;
-        if (left_child_index <= argc) {
+        if (left_child_index < argc) {
             // left child exists in the argv size
-            if (strcmp(argv[left_child_index - 1], "null") != 0) {
+            if (strcmp(argv[left_child_index], "null") != 0) {
                 // argv data isn't null
                 struct Node * left_child_node = (struct Node *) malloc(sizeof(struct Node));
-                left_child_node->data = argv[left_child_index - 1];
+                left_child_node->data = argv[left_child_index];
                 left_child_node->left_child = NULL;
                 left_child_node->right_child = NULL;
+                p->tree_node->left_child = left_child_node;
                 enqueue(&q, left_child_node, left_child_index);
             }
         }
         //display(&q);
-        if (right_child_index <= argc) {
+        if (right_child_index < argc) {
             // right child exists in the argv size
-            if (strcmp(argv[right_child_index - 1], "null") != 0) {
+            if (strcmp(argv[right_child_index], "null") != 0) {
                 // argv data isn't null
                 struct Node * right_child_node = (struct Node *) malloc(sizeof(struct Node));
-                right_child_node->data = argv[right_child_index - 1];
+                right_child_node->data = argv[right_child_index];
                 right_child_node->left_child = NULL;
                 right_child_node->right_child = NULL;
+                p->tree_node->right_child = right_child_node;
                 enqueue(&q, right_child_node, right_child_index);
             }
         }
         //display(&q);
+        //printf("================== DEBUG BEGIN ======================\n");
+        //printf("Root: %s\n", p->tree_node->data);
+        //printf("Left index: %d, Left data: %s\n", left_child_index-1, argv[left_child_index-1]);
+        //printf("Right index: %d, Right data: %s\n", right_child_index-1, argv[right_child_index-1]);
+        //printf("================== DEBUG END ======================\n");
     }
     
-    display_tree(&tree);
+    display_tree(root, 0);
+    //printf("%s %s %s\n", root->data, root->left_child->data, root->right_child->data);
     return 0;
 }
 
-void display_tree(struct Tree * tree) {
+void display_tree(struct Node * node, int dir) {
     // Design the display
+    // dir = 0 for root, 1 for left child, 2 for right child
+    if (dir == 1) {
+        for (int i=0; i<5; i++) {
+            printf("\n|");
+        }
+    } else if (dir == 2) {
+        for (int i=0; i<5; i++) {
+            printf("--");
+        }
+    }
+    printf("%s", node->data);
+    if (node->left_child) {
+        display_tree(node->left_child, 1);
+    }
+    if (node->right_child) {
+        display_tree(node->right_child, 2);
+    }
 }
 
 // ################### Queue related functions BEGIN ##########################
