@@ -36,6 +36,7 @@ void preorder_it(struct Node *, int);
 void inorder_rec(struct Node *);
 void inorder_it(struct Node *, int);
 void postorder_rec(struct Node *);
+void postorder_it(struct Node *, int);
 void push(struct Stack * st, struct Node * node);
 struct Node * pop(struct Stack * st);
 // ======= Queue related function definitions ========
@@ -120,6 +121,9 @@ int main(int argc, char *argv[]) {
     printf("Inorder Traversal (Iterative): ");
     inorder_it(root, argc - 1);
     printf("\n");
+    printf("Postorder Traversal (Iterative): ");
+    postorder_it(root, argc - 1);
+    printf("\n");
     return 0;
 }
 
@@ -190,6 +194,10 @@ void postorder_rec(struct Node * node) {
         postorder_rec(node->right_child);
     }
     printf(" %s ", node->data);
+}
+
+void postorder_it(struct Node * root, int size) {
+    
 }
 
 void push(struct Stack * st, struct Node * node) {
