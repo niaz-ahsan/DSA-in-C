@@ -26,6 +26,9 @@ struct Queue {
 };
 
 void preorder_rec(struct Node *);
+void inorder_rec(struct Node *);
+void postorder_rec(struct Node *);
+// ======= Queue related function definitions ========
 void init_queue(struct Queue * q);
 void enqueue(struct Queue * q, struct Node * data, int index);
 struct Q_return_node * dequeue(struct Queue * q); 
@@ -93,7 +96,13 @@ int main(int argc, char *argv[]) {
         //printf("================== DEBUG END ======================\n");
     }
     
+    printf("Preorder Traversal: ");
     preorder_rec(root);
+    printf("\nInorder Traversal: ");
+    inorder_rec(root);
+    printf("\nPostorder Traversal: ");
+    postorder_rec(root);
+    printf("\n");
     return 0;
 }
 
@@ -105,6 +114,26 @@ void preorder_rec(struct Node * node) {
     if (node->right_child) {
         preorder_rec(node->right_child);
     }
+}
+
+void inorder_rec(struct Node * node) {
+    if (node->left_child) {
+        inorder_rec(node->left_child);
+    }
+    printf(" %s ", node->data);
+    if (node->right_child) {
+        inorder_rec(node->right_child);
+    }
+}
+
+void postorder_rec(struct Node * node) {
+    if (node->left_child) {
+        postorder_rec(node->left_child);
+    }
+    if (node->right_child) {
+        postorder_rec(node->right_child);
+    }
+    printf(" %s ", node->data);
 }
 
 // ################### Queue related functions BEGIN ##########################
