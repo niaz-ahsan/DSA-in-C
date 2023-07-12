@@ -32,9 +32,10 @@ struct Stack {
 };
 
 void preorder_rec(struct Node *);
-void inorder_rec(struct Node *);
-void postorder_rec(struct Node *);
 void preorder_it(struct Node *, int);
+void inorder_rec(struct Node *);
+void inorder_it(struct Node *, int);
+void postorder_rec(struct Node *);
 void push(struct Stack * st, struct Node * node);
 struct Node * pop(struct Stack * st);
 // ======= Queue related function definitions ========
@@ -113,7 +114,11 @@ int main(int argc, char *argv[]) {
     postorder_rec(root);
     printf("\n");
     printf("=============== Iterative approach begin ===============\n");
+    printf("Preorder Traversal (iterative): ");
     preorder_it(root, argc - 1);
+    printf("\n");
+    printf("Inorder Traversal (Iterative): ");
+    inorder_it(root, argc - 1);
     printf("\n");
     return 0;
 }
@@ -129,7 +134,6 @@ void preorder_rec(struct Node * node) {
 }
 
 void preorder_it(struct Node * root, int size) {
-    printf("Preorder Traversal (iterative): ");
     struct Stack st;
     st.end = -1;
     st.len = 0;
@@ -154,6 +158,27 @@ void inorder_rec(struct Node * node) {
     printf(" %s ", node->data);
     if (node->right_child) {
         inorder_rec(node->right_child);
+    }
+}
+
+void inorder_it(struct Node * root, int size) {
+    struct Stack st;
+    st.end = -1;
+    st.stack = 0;
+    st.stack = (struct Node **) malloc(size * sizeof(struct Node));
+    int done = 0;
+    struct Node * current = root;
+    while (!done) {
+        if (current != NULL) {
+            push(&st, current);
+            current = current->left_child;
+        } else if (st.len) {
+            current = pop(&st);
+            printf(" %s ", current->data);
+            current = current->right_child;
+        } else {
+            done = 1;
+        }
     }
 }
 
