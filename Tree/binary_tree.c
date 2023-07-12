@@ -25,7 +25,7 @@ struct Queue {
     struct Q_node * last;
 };
 
-void display_tree(struct Node *, int);
+void preorder_rec(struct Node *);
 void init_queue(struct Queue * q);
 void enqueue(struct Queue * q, struct Node * data, int index);
 struct Q_return_node * dequeue(struct Queue * q); 
@@ -93,29 +93,17 @@ int main(int argc, char *argv[]) {
         //printf("================== DEBUG END ======================\n");
     }
     
-    display_tree(root, 0);
-    //printf("%s %s %s\n", root->data, root->left_child->data, root->right_child->data);
+    preorder_rec(root);
     return 0;
 }
 
-void display_tree(struct Node * node, int dir) {
-    // Design the display
-    // dir = 0 for root, 1 for left child, 2 for right child
-    if (dir == 1) {
-        for (int i=0; i<5; i++) {
-            printf("\n|");
-        }
-    } else if (dir == 2) {
-        for (int i=0; i<5; i++) {
-            printf("--");
-        }
-    }
-    printf("%s", node->data);
+void preorder_rec(struct Node * node) {
+    printf(" %s ", node->data);
     if (node->left_child) {
-        display_tree(node->left_child, 1);
+        preorder_rec(node->left_child);
     }
     if (node->right_child) {
-        display_tree(node->right_child, 2);
+        preorder_rec(node->right_child);
     }
 }
 
