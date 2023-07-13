@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+// Time O(n), Space O(h) - n = # of nodes, h = height of tree
 void preorder_rec(struct Node * node) {
     printf(" %s ", node->data);
     if (node->left_child) {
@@ -137,24 +138,24 @@ void preorder_rec(struct Node * node) {
     }
 }
 
-void preorder_it(struct Node * root, int size) {
+void preorder_it(struct Node * node, int size) {
     struct Stack st;
     st.end = -1;
     st.len = 0;
     st.stack = (struct Node **) malloc(size * sizeof(struct Node));
-    push(&st, root);
-    while (st.len) {
-        struct Node * p = pop(&st);
-        printf(" %s ", p->data);
-        if (p->right_child) {
-            push(&st, p->right_child);
-        }
-        if (p->left_child) {
-            push(&st, p->left_child);
+    while (node != NULL || st.len) {
+        if (node != NULL) {
+            printf(" %s ", node->data);
+            push(&st, node); 
+            node = node->left_child;
+        } else {
+            node = pop(&st);
+            node = node->right_child;
         }
     }
 }
 
+// Time O(n), Space O(h) - n = # of nodes, h = height of tree
 void inorder_rec(struct Node * node) {
     if (node->left_child) {
         inorder_rec(node->left_child);
@@ -165,27 +166,24 @@ void inorder_rec(struct Node * node) {
     }
 }
 
-void inorder_it(struct Node * root, int size) {
+void inorder_it(struct Node * node, int size) {
     struct Stack st;
     st.end = -1;
     st.stack = 0;
     st.stack = (struct Node **) malloc(size * sizeof(struct Node));
-    int done = 0;
-    struct Node * current = root;
-    while (!done) {
-        if (current != NULL) {
-            push(&st, current);
-            current = current->left_child;
-        } else if (st.len) {
-            current = pop(&st);
-            printf(" %s ", current->data);
-            current = current->right_child;
+    while (node != NULL || st.len) {
+        if (node != NULL) {
+            push(&st, node); 
+            node = node->left_child;
         } else {
-            done = 1;
+            node = pop(&st);
+            printf(" %s ", node->data);
+            node = node->right_child;
         }
     }
 }
 
+// Time O(n), Space O(h) - n = # of nodes, h = height of tree
 void postorder_rec(struct Node * node) {
     if (node->left_child) {
         postorder_rec(node->left_child);
