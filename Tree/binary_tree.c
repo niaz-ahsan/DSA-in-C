@@ -40,6 +40,7 @@ void postorder_it(struct Node *, int);
 int count_nodes(struct Node *);
 int count_height(struct Node *); 
 int count_leaf_nodes(struct Node *);
+void display_tree(struct Node *, int);
 // ======= Stack related function definitions ========
 void push(struct Stack * st, struct Node * node);
 struct Node * pop(struct Stack * st);
@@ -132,6 +133,8 @@ int main(int argc, char *argv[]) {
     printf("Total Nodes: %d\n", count_nodes(root));
     printf("Tree Height: %d\n", count_height(root));
     printf("Total Leaf Nodes: %d\n", count_leaf_nodes(root));
+    printf("=============== Attempting Tree Display ===============\n");
+    display_tree(root, 1);
     return 0;
 }
 
@@ -235,6 +238,21 @@ int count_leaf_nodes(struct Node * node) {
     if (node->left_child == NULL && node->right_child == NULL)
         return 1;
     return count_leaf_nodes(node->left_child) + count_leaf_nodes(node->right_child);
+}
+
+void print_space_for_display(int count) {
+    for (int i=0; i<count; i++) {
+        printf(" \t ");
+    }
+}
+
+void display_tree(struct Node * node, int jumps) {
+    if (node->right_child) 
+        display_tree(node->right_child, jumps + 1);
+    print_space_for_display(jumps);    
+    printf("%s\n", node->data);
+    if (node->left_child) 
+        display_tree(node->left_child, jumps + 1);
 }
 
 // ################### Stack related functions BEGIN ##########################
