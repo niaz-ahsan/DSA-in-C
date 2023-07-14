@@ -37,6 +37,8 @@ void inorder_rec(struct Node *);
 void inorder_it(struct Node *, int);
 void postorder_rec(struct Node *);
 void postorder_it(struct Node *, int);
+int count_nodes(struct Node *);
+// ======= Stack related function definitions ========
 void push(struct Stack * st, struct Node * node);
 struct Node * pop(struct Stack * st);
 // ======= Queue related function definitions ========
@@ -124,6 +126,8 @@ int main(int argc, char *argv[]) {
     printf("Postorder Traversal (Iterative): ");
     postorder_it(root, argc - 1);
     printf("\n");
+    printf("=============== Iterative approach end ===============\n");
+    printf("Total Nodes: %d\n", count_nodes(root));
     return 0;
 }
 
@@ -195,8 +199,20 @@ void postorder_rec(struct Node * node) {
 }
 
 void postorder_it(struct Node * root, int size) {
-    
+    // will be done later
 }
+
+int count_nodes(struct Node * node) {
+    if (node == NULL) {
+        return 0;
+    }
+    int x, y;
+    x = count_nodes(node->left_child);
+    y = count_nodes(node->right_child);
+    return (x + y + 1);
+}
+
+// ################### Queue related functions BEGIN ##########################
 
 void push(struct Stack * st, struct Node * node) {
     st->end++;
