@@ -237,7 +237,7 @@ int count_leaf_nodes(struct Node * node) {
     return count_leaf_nodes(node->left_child) + count_leaf_nodes(node->right_child);
 }
 
-// ################### Queue related functions BEGIN ##########################
+// ################### Stack related functions BEGIN ##########################
 
 void push(struct Stack * st, struct Node * node) {
     st->end++;
