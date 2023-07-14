@@ -38,6 +38,8 @@ void inorder_it(struct Node *, int);
 void postorder_rec(struct Node *);
 void postorder_it(struct Node *, int);
 int count_nodes(struct Node *);
+int count_height(struct Node *); 
+int count_leaf_nodes(struct Node *);
 // ======= Stack related function definitions ========
 void push(struct Stack * st, struct Node * node);
 struct Node * pop(struct Stack * st);
@@ -128,6 +130,8 @@ int main(int argc, char *argv[]) {
     printf("\n");
     printf("=============== Iterative approach end ===============\n");
     printf("Total Nodes: %d\n", count_nodes(root));
+    printf("Tree Height: %d\n", count_height(root));
+    printf("Total Leaf Nodes: %d\n", count_leaf_nodes(root));
     return 0;
 }
 
@@ -206,10 +210,31 @@ int count_nodes(struct Node * node) {
     if (node == NULL) {
         return 0;
     }
-    int x, y;
-    x = count_nodes(node->left_child);
-    y = count_nodes(node->right_child);
-    return (x + y + 1);
+    // formula: total nodes on left subtree + total nodes on right subtree + this node
+    return count_nodes(node->left_child) + count_nodes(node->right_child) + 1;
+}
+
+int count_height(struct Node * node) {
+    // height starts from 0 ...
+    if (node == NULL) {
+        return 0;
+    }
+    int x = 0, y = 0;
+    x = count_height(node->left_child);
+    y = count_height(node->right_child);
+    if (x > y) {
+        return x + 1;
+    } else {
+        return y + 1;
+    }
+}
+
+int count_leaf_nodes(struct Node * node) {
+    if (node == NULL)
+        return 0;
+    if (node->left_child == NULL && node->right_child == NULL)
+        return 1;
+    return count_leaf_nodes(node->left_child) + count_leaf_nodes(node->right_child);
 }
 
 // ################### Queue related functions BEGIN ##########################
