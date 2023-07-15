@@ -250,11 +250,11 @@ void print_space_for_display(int count) {
 
 void display_tree_postorder(struct Node * node, int jumps) {
     if (node->right_child) 
-        display_tree(node->right_child, jumps + 1);    
+        display_tree_postorder(node->right_child, jumps + 1);    
     print_space_for_display(jumps);    
     printf("%s\n", node->data);
     if (node->left_child) 
-        display_tree(node->left_child, jumps + 1);
+        display_tree_postorder(node->left_child, jumps + 1);
 }
 
 // ################### Stack related functions BEGIN ##########################
