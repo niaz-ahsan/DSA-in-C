@@ -51,12 +51,13 @@ struct Node * create_node(char * data, int index) {
 }
 
 struct Node * generate_tree(char ** data, int size) {
+    // Queue initialization
     struct Stack push_st, pop_st;
     struct Queue q;
     q.push_stack = &push_st;
     q.pop_stack = &pop_st;
     init_queue(&q, size);
-    
+    // root node setup
     struct Node * root;
     if (size <= 0) {
         printf("Tree data not provided!\n");
@@ -64,7 +65,7 @@ struct Node * generate_tree(char ** data, int size) {
     }
     root = create_node(data[0], 0);
     enqueue(&q, root);
-
+    // generation of rest of the tree
     while (! queue_is_empty(&q) ) {
         struct Node * node = dequeue(&q);
         if (! node) {
