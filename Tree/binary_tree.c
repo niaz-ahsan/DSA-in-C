@@ -241,14 +241,16 @@ int count_leaf_nodes(struct Node * node) {
 }
 
 void print_space_for_display(int count) {
+    //printf("\n");
     for (int i=0; i<count; i++) {
         printf(" \t ");
     }
+    printf("-----");
 }
 
 void display_tree(struct Node * node, int jumps) {
     if (node->right_child) 
-        display_tree(node->right_child, jumps + 1);
+        display_tree(node->right_child, jumps + 1);    
     print_space_for_display(jumps);    
     printf("%s\n", node->data);
     if (node->left_child) 
