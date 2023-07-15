@@ -4,6 +4,7 @@
 
 struct Node {
     char * data;
+    int index; // only required to generate tree from array, otherwise redundant.
     struct Node * left;
     struct Node * right;
 };
@@ -20,6 +21,8 @@ struct Queue {
     struct Stack * pop_stack;
 };
 
+struct Node * generate_tree(char ** data, int);
+void display_tree(struct Node *, int);
 // =========== Stack related functions ===========
 void init_stack(struct Stack *, int);
 void push(struct Stack *, struct Node *);
@@ -28,46 +31,79 @@ struct Node * pop(struct Stack *);
 void init_queue(struct Queue *, int);
 void enqueue(struct Queue *, struct Node *);
 struct Node * dequeue(struct Queue *);
+int queue_is_empty(struct Queue *);
 
-int main(void) {
+int main(void) {    
+    char * tree_data[] = {"1","2","3","4","5","-1","-1"}; // -1 = NULL
+    int len = 7;
+    struct Node * root = generate_tree(tree_data, len);
+    display_tree(root, 1);
+    return 0;
+}
+
+struct Node * create_node(char * data, int index) {
+    struct Node * node = (struct Node *) malloc(sizeof(struct Node));
+    node->data = data;
+    node->index = index;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+struct Node * generate_tree(char ** data, int size) {
     struct Stack push_st, pop_st;
     struct Queue q;
     q.push_stack = &push_st;
     q.pop_stack = &pop_st;
-    init_queue(&q, 7);
+    init_queue(&q, size);
     
-    
-    struct Node niaz = {"Niaz", NULL, NULL};
-    struct Node ahsan = {"Ahsan", NULL, NULL};
-    struct Node prodhan = {"Prodhan", NULL, NULL};
-    struct Node zuni = {"Zunaira", NULL, NULL};
-    struct Node zainab = {"Zainab", NULL, NULL};
-    struct Node sidd = {"Siddiqua", NULL, NULL};
-    struct Node x = {"X", NULL, NULL};
-    
-    enqueue(&q, &niaz);
-    enqueue(&q, &ahsan);
-    enqueue(&q, &prodhan);
-    struct Node * removed = dequeue(&q);
-    printf("Popped: %s\n", removed->data);
-    enqueue(&q, &zuni);
-    enqueue(&q, &zainab);
-    struct Node * removed_again = dequeue(&q);
-    printf("Popped: %s\n", removed_again->data);
+    struct Node * root;
+    if (size <= 0) {
+        printf("Tree data not provided!\n");
+        return NULL;
+    }
+    root = create_node(data[0], 0);
+    enqueue(&q, root);
 
-    struct Node * removed_again2 = dequeue(&q);
-    printf("Popped: %s\n", removed_again2->data);
+    while (! queue_is_empty(&q) ) {
+        struct Node * node = dequeue(&q);
+        if (! node) {
+            // redunddant block
+            printf("Tree generation Queue is empty\n");
+            return NULL;    
+        }
+        int left_index = ((node->index + 1) * 2) - 1; // left child 2i, when i starts from 1
+        int right_index = ((node->index + 1) * 2); // right child 2i+1, when i starts from 1
+        if (left_index < size && strcmp(data[left_index], "-1") != 0 ) {
+            // index exists in tree array && data isn't -1
+            struct Node * left_node = create_node(data[left_index], left_index);
+            node->left = left_node;
+            enqueue(&q, left_node);
+        }
+        if (right_index < size && strcmp(data[right_index], "-1") != 0 ) {
+            // index exists in tree array && data isn't -1
+            struct Node * right_node = create_node(data[right_index], right_index);
+            node->right = right_node;
+            enqueue(&q, right_node);
+        }
+    }
+    return root;
+}
 
-    struct Node * removed_again3 = dequeue(&q);
-    printf("Popped: %s\n", removed_again3->data);
+void print_space_for_display(int count) {
+    //printf("\n");
+    for (int i=0; i<count; i++) {
+        printf(" \t ");
+    }
+}
 
-    struct Node * removed_again4 = dequeue(&q);
-    printf("Popped: %s\n", removed_again4->data);
-
-    struct Node * removed_again5 = dequeue(&q);
-    printf("Popped: %p\n", removed_again5);
-
-    return 0;
+void display_tree(struct Node * node, int jumps) {
+    if (node->right) 
+        display_tree(node->right, jumps + 1);    
+    print_space_for_display(jumps);    
+    printf("%s\n", node->data);
+    if (node->left) 
+        display_tree(node->left, jumps + 1);
 }
 
 // ################### Stack related functions BEGIN ##########################
@@ -137,4 +173,12 @@ struct Node * dequeue(struct Queue * q) {
     struct Node * removed_node = pop(q->pop_stack);
     return removed_node;
 }
+
+int queue_is_empty(struct Queue * q) {
+    if (q->push_stack->len <= 0 && q->pop_stack->len <= 0) 
+        return 1;
+    else 
+        return 0;
+}
+
 // ################### Queue related functions END ##########################
