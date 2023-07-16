@@ -10,6 +10,8 @@ struct Node {
 
 struct Node * create_node(int);
 void display_tree(struct Node *, int);
+void inorder_traversal(struct Node *);
+int search(struct Node *, int, int);
 
 int main(void) {
     struct Node * root = create_node(8);
@@ -23,6 +25,10 @@ int main(void) {
     root->right->right->left = create_node(13);
     
     display_tree(root, 1);
+    printf("\nData is sorted as follows: ");
+    inorder_traversal(root);
+    printf("\nSearching 9: %d\n", search(root, 9, 0));
+    return 0;
 }
 
 struct Node * create_node(int data) {
@@ -46,4 +52,25 @@ void display_tree(struct Node * node, int jumps) {
     printf("%d\n", node->data);
     if (node->left) 
         display_tree(node->left, jumps + 1);
+}
+
+void inorder_traversal(struct Node * node) {
+    if (node) {
+        inorder_traversal(node->left);
+        printf(" %d ", node->data);
+        inorder_traversal(node->right);
+    }
+}
+
+int search(struct Node * node, int data, int jumps) {
+    // +ve int --> if data found, 0--> if data not found
+    if(! node) 
+        return 0;
+    if (data < node->data) 
+        return search(node->left, data, ++jumps);
+    else if (data > node->data) 
+        return search(node->right, data, ++jumps);
+    else
+        return jumps; // data == node->data, found!
+
 }
