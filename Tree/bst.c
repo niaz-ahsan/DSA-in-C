@@ -12,6 +12,8 @@ struct Node * create_node(int);
 void display_tree(struct Node *, int);
 void inorder_traversal(struct Node *);
 int search(struct Node *, int, int);
+void print_search_result(int, int);
+void iter_search(struct Node *, int);
 
 int main(void) {
     struct Node * root = create_node(8);
@@ -27,7 +29,17 @@ int main(void) {
     display_tree(root, 1);
     printf("\nData is sorted as follows: ");
     inorder_traversal(root);
-    printf("\nSearching 9: %d\n", search(root, 9, 0));
+    printf("\n=============== Recursive Seacrh ==============\n");
+    int s_4 = search(root, 4, 0);
+    print_search_result(4, s_4);
+    int s_14 = search(root, 14, 0);
+    print_search_result(14, s_14);
+    int s_12 = search(root, 12, 0);
+    print_search_result(12, s_12);
+    printf("\n=============== Iterative Seacrh ==============\n");
+    iter_search(root, 4);
+    iter_search(root, 14);
+    iter_search(root, 12);
     return 0;
 }
 
@@ -62,10 +74,11 @@ void inorder_traversal(struct Node * node) {
     }
 }
 
+// time O(h), h = height of tree = logn
 int search(struct Node * node, int data, int jumps) {
-    // +ve int --> if data found, 0--> if data not found
+    // +ve int --> if data found, -1 --> if data not found
     if(! node) 
-        return 0;
+        return -1;
     if (data < node->data) 
         return search(node->left, data, ++jumps);
     else if (data > node->data) 
@@ -73,4 +86,27 @@ int search(struct Node * node, int data, int jumps) {
     else
         return jumps; // data == node->data, found!
 
+}
+
+void print_search_result(int data, int output) {
+    (output > -1)? printf("%d is found, hops needed: %d\n", data, output) : printf("%d NOT found!\n", data);
+}
+
+void iter_search(struct Node * node, int data) {
+    int hops = 0;
+    while (node && node->data != data) {
+        //printf("%d\n", node->data);
+        if (data < node->data) {
+            node = node->left;
+        }
+        else if (data > node->data) {
+            node = node->right;
+        }
+        hops++;
+    }
+    if(node) {
+        printf("%d is found, hops needed: %d\n", data, hops);
+    } else {
+        printf("%d NOT found\n", data);
+    }
 }
