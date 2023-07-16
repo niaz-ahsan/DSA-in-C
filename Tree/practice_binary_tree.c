@@ -27,6 +27,7 @@ void preorder_it(struct Node *, int);
 void inorder_it(struct Node *, int);
 int height(struct Node *);
 int leaf_nodes(struct Node *);
+int total_nodes(struct Node *);
 // =========== Stack related functions ===========
 void init_stack(struct Stack *, int);
 void push(struct Stack *, struct Node *);
@@ -49,6 +50,7 @@ int main(void) {
     printf("\nInorder Traversal: ");
     inorder_it(root, len);
     printf("\nHeight: %d\n", height(root));
+    printf("Total Nodes: %d\n", total_nodes(root));
     printf("Leaf Nodes: %d\n", leaf_nodes(root));
     return 0;
 }
@@ -165,6 +167,13 @@ int leaf_nodes(struct Node * node) {
     if (! node->left && ! node->right) 
         return 1;
     return leaf_nodes(node->left) + leaf_nodes(node->right);
+}
+
+int total_nodes(struct Node * node) {
+    if (! node) {
+        return 0;
+    }
+    return total_nodes(node->left) + total_nodes(node->right) + 1;
 }
 
 // ################### Stack related functions BEGIN ##########################
