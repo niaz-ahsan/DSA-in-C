@@ -23,6 +23,10 @@ struct Queue {
 
 struct Node * generate_tree(char ** data, int);
 void display_tree(struct Node *, int);
+void preorder_it(struct Node *, int);
+void inorder_it(struct Node *, int);
+int height(struct Node *);
+int leaf_nodes(struct Node *);
 // =========== Stack related functions ===========
 void init_stack(struct Stack *, int);
 void push(struct Stack *, struct Node *);
@@ -34,10 +38,18 @@ struct Node * dequeue(struct Queue *);
 int queue_is_empty(struct Queue *);
 
 int main(void) {    
-    char * tree_data[] = {"1","2","3","4","5","-1","-1"}; // -1 = NULL
-    int len = 7;
+    //char * tree_data[] = {"1","2","3","4","5","-1","-1"}; // -1 = NULL
+    char * tree_data[] = {"1","2","3","4","5","6","7","8","9","-1","-1"}; // -1 = NULL
+    int len = 11;
     struct Node * root = generate_tree(tree_data, len);
+    printf("======= Tree Display ========\n");
     display_tree(root, 1);
+    printf("\nPreorder Traversal: ");
+    preorder_it(root, len);
+    printf("\nInorder Traversal: ");
+    inorder_it(root, len);
+    printf("\nHeight: %d\n", height(root));
+    printf("Leaf Nodes: %d\n", leaf_nodes(root));
     return 0;
 }
 
@@ -92,7 +104,6 @@ struct Node * generate_tree(char ** data, int size) {
 }
 
 void print_space_for_display(int count) {
-    //printf("\n");
     for (int i=0; i<count; i++) {
         printf(" \t ");
     }
@@ -105,6 +116,55 @@ void display_tree(struct Node * node, int jumps) {
     printf("%s\n", node->data);
     if (node->left) 
         display_tree(node->left, jumps + 1);
+}
+
+void preorder_it(struct Node * node, int size) {
+    struct Stack st;
+    init_stack(&st, size);
+    while (st.len || node) {
+        if (node) {
+            printf(" %s ", node->data);
+            push(&st, node);
+            node = node->left;
+        } else {
+            node = pop(&st);
+            node = node->right;
+        }
+    }
+}
+
+void inorder_it(struct Node * node, int size) {
+    struct Stack st;
+    init_stack(&st, size);
+    while (st.len || node) {
+        if (node) {
+            push(&st, node);
+            node = node->left;
+        } else {
+            node = pop(&st);
+            printf(" %s ", node->data);
+            node = node->right;
+        }
+    }
+}
+
+int height(struct Node * node) {
+    if (! node) {
+        return -1;
+    }
+    int x,y;
+    x = height(node->left);
+    y = height(node->right);
+    if (x > y) 
+        return x + 1;
+    else 
+        return y + 1;
+}
+
+int leaf_nodes(struct Node * node) {
+    if (! node->left && ! node->right) 
+        return 1;
+    return leaf_nodes(node->left) + leaf_nodes(node->right);
 }
 
 // ################### Stack related functions BEGIN ##########################
