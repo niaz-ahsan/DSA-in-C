@@ -14,6 +14,7 @@ void inorder_traversal(struct Node *);
 int search(struct Node *, int, int);
 void print_search_result(int, int);
 void iter_search(struct Node *, int);
+void insert_new_node(struct Node *, int);
 
 int main(void) {
     struct Node * root = create_node(8);
@@ -25,7 +26,10 @@ int main(void) {
     root->right = create_node(10);
     root->right->right = create_node(14);
     root->right->right->left = create_node(13);
-    
+    insert_new_node(root, 18);
+    insert_new_node(root, 9);
+    insert_new_node(root, 2);
+
     display_tree(root, 1);
     printf("\nData is sorted as follows: ");
     inorder_traversal(root);
@@ -109,4 +113,32 @@ void iter_search(struct Node * node, int data) {
     } else {
         printf("%d NOT found\n", data);
     }
+}
+
+void insert_new_node(struct Node * node, int data) {
+    /*
+    first search the exact position, if the same data is found dont duplicate.
+    Use trailing pointer to have the last node visited in order to insert the node once 
+    proper place for the node is found.
+    */ 
+    struct Node * trailing = NULL;
+    struct Node * new_node = create_node(data);
+    while (node && node->data != data) {
+        trailing = node;
+        if (data < node->data) {
+            node = node->left;
+        } else if (data > node->data) {
+            node = node->right;
+        }
+    }
+    if (node) {
+        // that data already exists. Dont insert.
+        printf("Data already exists. Insert not needed\n");
+        return;
+    }
+    // node is NULL, so insert required.
+    if (data < trailing->data) 
+        trailing->left = new_node;
+    else
+        trailing->right = new_node;
 }
