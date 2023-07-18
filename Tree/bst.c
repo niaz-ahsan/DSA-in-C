@@ -17,21 +17,9 @@ void iter_search(struct Node *, int);
 struct Node * insert_new_node(struct Node *, int);
 struct Node * inorder_predecessor(struct Node *);
 struct Node * inorder_successor(struct Node *);
+int height(struct Node *);
 
 int main(void) {
-    /*struct Node * root = create_node(8);
-    root->left = create_node(3);
-    root->left->left = create_node(1);
-    root->left->right = create_node(6);
-    root->left->right->left = create_node(4);
-    root->left->right->right = create_node(7);
-    root->right = create_node(10);
-    root->right->right = create_node(14);
-    root->right->right->left = create_node(13);
-    insert_new_node(root, 18);
-    insert_new_node(root, 9);
-    insert_new_node(root, 2);*/
-
     struct Node * root = insert_new_node(root, 8);
     struct Node * n_3 = insert_new_node(root, 3);
     struct Node * n_1 = insert_new_node(root, 1);
@@ -44,6 +32,7 @@ int main(void) {
     struct Node * n_18 = insert_new_node(root, 18);
     struct Node * n_9 = insert_new_node(root, 9);
     struct Node * n_2 = insert_new_node(root, 2);
+    struct Node * n_100 = insert_new_node(root, 100);
 
     display_tree(root, 1);
     printf("\nData is sorted as follows: ");
@@ -59,6 +48,10 @@ int main(void) {
     iter_search(root, 4);
     iter_search(root, 14);
     iter_search(root, 12);
+    printf("\n");
+    printf("Inorder pred of 3: %d\n", inorder_predecessor(n_3)->data);
+    printf("Inorder succ of 3: %d\n", inorder_successor(n_3)->data);
+    printf("Height of the tree: %d\n", height(root));
     return 0;
 }
 
@@ -185,4 +178,16 @@ struct Node * inorder_successor(struct Node * node) {
         node = node->left;
     }
     return node;
+}
+
+int height(struct Node * node) {
+    if (! node)
+        return -1;
+    int x, y;
+    x = height(node->left);
+    y = height(node->right);
+    if (x > y) 
+        return x + 1;
+    else 
+        return y + 1;
 }
