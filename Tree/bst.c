@@ -14,10 +14,12 @@ void inorder_traversal(struct Node *);
 int search(struct Node *, int, int);
 void print_search_result(int, int);
 void iter_search(struct Node *, int);
-void insert_new_node(struct Node *, int);
+struct Node * insert_new_node(struct Node *, int);
+struct Node * inorder_predecessor(struct Node *);
+struct Node * inorder_successor(struct Node *);
 
 int main(void) {
-    struct Node * root = create_node(8);
+    /*struct Node * root = create_node(8);
     root->left = create_node(3);
     root->left->left = create_node(1);
     root->left->right = create_node(6);
@@ -28,7 +30,20 @@ int main(void) {
     root->right->right->left = create_node(13);
     insert_new_node(root, 18);
     insert_new_node(root, 9);
-    insert_new_node(root, 2);
+    insert_new_node(root, 2);*/
+
+    struct Node * root = insert_new_node(root, 8);
+    struct Node * n_3 = insert_new_node(root, 3);
+    struct Node * n_1 = insert_new_node(root, 1);
+    struct Node * n_6 = insert_new_node(root, 6);
+    struct Node * n_4 = insert_new_node(root, 4);
+    struct Node * n_7 = insert_new_node(root, 7);
+    struct Node * n_10 = insert_new_node(root, 10);
+    struct Node * n_14 = insert_new_node(root, 14);
+    struct Node * n_13 = insert_new_node(root, 13);
+    struct Node * n_18 = insert_new_node(root, 18);
+    struct Node * n_9 = insert_new_node(root, 9);
+    struct Node * n_2 = insert_new_node(root, 2);
 
     display_tree(root, 1);
     printf("\nData is sorted as follows: ");
@@ -115,7 +130,7 @@ void iter_search(struct Node * node, int data) {
     }
 }
 
-void insert_new_node(struct Node * node, int data) {
+struct Node * insert_new_node(struct Node * node, int data) {
     /*
     first search the exact position, if the same data is found dont duplicate.
     Use trailing pointer to have the last node visited in order to insert the node once 
@@ -134,11 +149,40 @@ void insert_new_node(struct Node * node, int data) {
     if (node) {
         // that data already exists. Dont insert.
         printf("Data already exists. Insert not needed\n");
-        return;
+        return NULL;
     }
     // node is NULL, so insert required.
-    if (data < trailing->data) 
-        trailing->left = new_node;
-    else
-        trailing->right = new_node;
+    if (trailing) {
+        if (data < trailing->data) 
+            trailing->left = new_node;
+        else
+            trailing->right = new_node;
+    }
+    return new_node;
+}
+
+struct Node * inorder_predecessor(struct Node * node) {
+    // rightmost child/node of the left subtree of the given node
+    if (! node) 
+        return NULL;
+    if (! node->left)
+        return NULL;
+    node = node->left;
+    while (node->right) {
+        node = node->right;
+    }
+    return node;
+}
+
+struct Node * inorder_successor(struct Node * node) {
+    // leftmost child/node of the right subtree of the given node
+    if (! node) 
+        return NULL;
+    if (! node->right)
+        return NULL;
+    node = node->right;
+    while (node->left) {
+        node = node->left;
+    }
+    return node;
 }
