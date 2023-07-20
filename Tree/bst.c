@@ -20,7 +20,7 @@ struct Node * inorder_successor(struct Node *);
 int height(struct Node *);
 
 int main(void) {
-    struct Node * root = insert_new_node(root, 8);
+    struct Node * root = insert_new_node(NULL, 8);
     struct Node * n_3 = insert_new_node(root, 3);
     struct Node * n_1 = insert_new_node(root, 1);
     struct Node * n_6 = insert_new_node(root, 6);
