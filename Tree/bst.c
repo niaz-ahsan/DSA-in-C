@@ -24,6 +24,7 @@ struct Parent_child_node inorder_predecessor(struct Node *);
 struct Parent_child_node inorder_successor(struct Node *);
 struct Parent_child_node search_node_and_parent(struct Node *, int);
 int height(struct Node *);
+int is_leaf(struct Node *);
 struct Node * delete(struct Node *, int);
 
 int main(void) {
@@ -63,9 +64,10 @@ int main(void) {
     printf("Height of the tree: %d\n", height(root));
     struct Parent_child_node searched = search_node_and_parent(root, 13);
     printf("Search of 13: %d %d\n", searched.parent->data, searched.child->data);*/
-    printf("Deleting 13\n");
-    delete(root, 13);
+    printf("Deleting 8\n");
+    delete(root, 8);
     display_tree(root, 1);
+    printf("\n");
     inorder_traversal(root);
     printf("\n");
     return 0;
@@ -175,8 +177,10 @@ struct Parent_child_node inorder_predecessor(struct Node * node) {
     struct Parent_child_node output = {NULL, NULL};
     if (! node) 
         return output;
-    if (! node->left)
-        return output;
+    if (! node->left) {
+        output.parent = node;
+        output.child = NULL;
+    }
     struct Node * trailing = node;    
     node = node->left;
     while (node->right) {
@@ -193,8 +197,11 @@ struct Parent_child_node inorder_successor(struct Node * node) {
     struct Parent_child_node output = {NULL, NULL};
     if (! node) 
         return output;
-    if (! node->right)
+    if (! node->right) {
+        output.parent = node;
+        output.child = NULL;
         return output;
+    }
     struct Node * trailing = node;
     node = node->right;
     while (node->left) {
@@ -220,9 +227,9 @@ int height(struct Node * node) {
 
 int is_leaf(struct Node * node) {
     // 1 --> yes leaf | -1 --> not leaf
-    if ( (! node->left) && (! node->right) ) 
+    if ( (node->left == NULL) && (node->right == NULL) ) 
         return 1;
-    return -1;
+    return 0;
 }
 
 struct Parent_child_node search_node_and_parent(struct Node * node, int data) {
@@ -235,7 +242,7 @@ struct Parent_child_node search_node_and_parent(struct Node * node, int data) {
         else if (data > node->data)
             node = node->right;
     }
-    if (node && trailing) {
+    if (node) {
         output.parent = trailing;
         output.child = node;
     }
@@ -271,5 +278,29 @@ struct Node * delete(struct Node * node, int data) {
         }
     }
     // the to_delete exists and it's not a leaf
-
+    struct Node * to_replace = NULL;
+    struct Node * parent_of_to_replace = NULL;
+    struct Parent_child_node replacement;
+    while (1) {
+        if ( height(to_delete->left) > height(to_delete->right) ) {
+            replacement = inorder_predecessor(to_delete);
+        } else {
+            replacement = inorder_successor(to_delete);
+        }
+        //printf("%d %d\n", replacement.parent->data, replacement.child->data);
+        to_replace = replacement.child;
+        if (! to_replace) 
+            break;
+        parent_of_to_replace = replacement.parent;
+        to_delete->data = to_replace->data;
+        to_delete = to_replace;
+    }
+    // parent_of_to_replace and to_delete should be disconnected and free(to_delete)
+    if (to_delete->data < parent_of_to_replace->data) {
+        parent_of_to_replace->left = NULL;
+    } else {
+        parent_of_to_replace->right = NULL;
+    }
+    free(to_delete);
+    return node;
 } 
