@@ -8,6 +8,6 @@ struct Node {
 };
 
 int main(void) {
-    
+    // postponing the implementation
     return 0;
 }
