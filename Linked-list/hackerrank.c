@@ -302,3 +302,22 @@ bool has_cycle(struct SinglyLinkedListNode * head) {
     }
     return found;
 }
+
+// Problem: Find Merge Point of Two Lists
+// link: https://www.hackerrank.com/challenges/find-the-merge-point-of-two-joined-linked-lists/copy-from/338319740 
+
+int findMergeNode(struct SinglyLinkedListNode * head1, struct SinglyLinkedListNode * head2) {
+    struct SinglyLinkedListNode * curr1 = head1;
+    struct SinglyLinkedListNode * curr2 = head2;
+    while (curr1) {
+        curr2 = head2;
+        while (curr2) {
+            if (curr1 == curr2) {
+                return curr1->data;
+            } 
+            curr2 = curr2->next;
+        }
+        curr1 = curr1->next;
+    }
+    return -1;
+}
