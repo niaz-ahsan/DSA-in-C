@@ -214,3 +214,91 @@ struct SinglyLinkedListNode * mergeLists(struct SinglyLinkedListNode * head1, st
     }
     return newList->head;
 }
+
+// Problem: Get Node Value
+// link: https://www.hackerrank.com/challenges/get-the-value-of-the-node-at-a-specific-position-from-the-tail/copy-from/338131964 
+
+void push(struct SinglyLinkedList * stack, int data) {
+    struct SinglyLinkedListNode * node = (struct SinglyLinkedListNode *) malloc(sizeof(struct SinglyLinkedListNode));
+    node->data = data;
+    node->next = NULL;
+    if (!stack->head) {
+        // stack is empty
+        stack->head = node;
+        stack->tail = node;
+    }
+    node->next = stack->head;
+    stack->head = node;
+}
+
+int pop(struct SinglyLinkedList * stack) {
+    // -1 if no data in stack
+    if (!stack->head) {
+        return -1;
+    }
+    struct SinglyLinkedListNode * node = stack->head;
+    stack->head = node->next;
+    int ret = node->data;
+    free(node);
+    return ret;
+}
+
+int getNode(struct SinglyLinkedListNode * llist, int positionFromTail) {
+    struct SinglyLinkedList * stack = (struct SinglyLinkedList *) malloc(sizeof(struct SinglyLinkedList));
+    stack->head = NULL;
+    stack->tail = NULL;
+    struct SinglyLinkedListNode * current = llist;
+    while (current) {
+        push(stack, current->data);
+        current = current->next;
+    }
+    int output;
+    for (int i=0; i<=positionFromTail; i++) {
+        output = pop(stack);
+    }
+    return output;
+}
+
+// Problem: Delete duplicate-value nodes from a sorted linked list
+// link: https://www.hackerrank.com/challenges/delete-duplicate-value-nodes-from-a-sorted-linked-list/copy-from/338188953 
+
+struct SinglyLinkedListNode * removeDuplicates(struct SinglyLinkedListNode * llist) {
+    struct SinglyLinkedListNode * prev = NULL;
+    struct SinglyLinkedListNode * curr = llist;
+    while(curr) {
+        if (prev) {
+            if (prev->data == curr->data) {
+                prev->next = curr->next;
+                curr = curr->next;
+                continue;
+            }
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    return llist;
+}
+
+// Problem: Cycle Detection
+// link: https://www.hackerrank.com/challenges/detect-whether-a-linked-list-contains-a-cycle/copy-from/338252402
+
+bool has_cycle(struct SinglyLinkedListNode * head) {
+    bool found = 0;
+    struct SinglyLinkedListNode * hare = head;
+    struct SinglyLinkedListNode * tort = head;
+    if (! head) 
+        return found;
+    while (1) {
+        tort = tort->next;
+        if (hare && hare->next) {
+            hare = hare->next->next;
+        } else {
+            break;
+        }
+        if(hare == tort) {
+            found = 1;
+            break;
+        }
+    }
+    return found;
+}
