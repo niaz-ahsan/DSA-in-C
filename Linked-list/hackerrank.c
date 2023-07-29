@@ -102,4 +102,115 @@ struct SinglyLinkedListNode * deleteNode(struct SinglyLinkedListNode * llist, in
     return llist;
 }
 
+// Problem: Print in Reverse
+// link: https://www.hackerrank.com/challenges/print-the-elements-of-a-linked-list-in-reverse/problem
 
+void reversePrint(struct SinglyLinkedListNode * llist) {
+    struct SinglyLinkedListNode * prev = NULL;
+    struct SinglyLinkedListNode * curr = llist;
+    struct SinglyLinkedListNode * next = curr->next;
+    while (1) {
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        if (next)
+            next = next->next;
+        else
+            break;
+    }
+    llist = prev;
+    //printf("%d\n", llist->data);
+    struct SinglyLinkedListNode * current = llist;
+    while (current) {
+        printf("%d\n", current->data);
+        current = current->next;
+    }
+}
+
+// Problem: Reverse a linked list
+// link: https://www.hackerrank.com/challenges/reverse-a-linked-list/problem
+
+struct SinglyLinkedListNode * reverse(struct SinglyLinkedListNode * llist) {
+    struct SinglyLinkedListNode * prev = NULL;
+    struct SinglyLinkedListNode * curr = llist;
+    struct SinglyLinkedListNode * next = curr->next;
+    while (1) {
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        if (next)
+            next = next->next;
+        else
+            break;
+    }
+    llist = prev;
+    return llist;
+}
+
+// Problem: Compare two linked lists
+// link: https://www.hackerrank.com/challenges/compare-two-linked-lists/submissions/code/338074400 
+
+bool compare_lists(struct SinglyLinkedListNode * head1, struct SinglyLinkedListNode * head2) {
+    struct SinglyLinkedListNode * curr1 = head1;
+    struct SinglyLinkedListNode * curr2 = head2;
+    while (curr1 && curr2) {
+        if (curr1->data != curr2->data) {
+            // break;
+            return 0;
+        }
+        curr1 = curr1->next;
+        curr2 = curr2->next;
+    }
+    return (curr1 == curr2)?  1 : 0;
+}
+
+// Problem: Merge two sorted linked lists
+// link: https://www.hackerrank.com/challenges/merge-two-sorted-linked-lists/copy-from/338094476
+
+struct NewLL {
+    struct SinglyLinkedListNode * head;
+    struct SinglyLinkedListNode * tail;
+}; 
+
+void push_to_new_list(struct NewLL * newList, int data) {
+    struct SinglyLinkedListNode * node = (struct SinglyLinkedListNode *) malloc(sizeof(struct SinglyLinkedListNode));
+    node->data = data;
+    node->next = NULL;
+    if (!newList->head || !newList->tail) {    
+        newList->head = node;
+        newList->tail = node;
+        return;
+    }
+    newList->tail->next = node;
+    newList->tail = node;
+}
+ 
+struct SinglyLinkedListNode * mergeLists(struct SinglyLinkedListNode * head1, struct SinglyLinkedListNode * head2) {
+    struct SinglyLinkedListNode * curr1 = head1;
+    struct SinglyLinkedListNode * curr2 = head2;
+    struct NewLL * newList = (struct NewLL *) malloc(sizeof(struct NewLL));
+    newList->head = NULL;
+    newList->tail = NULL;
+    while (curr1 && curr2) {
+        if (curr1->data < curr2->data) {
+            // push curr1->data to the new list;
+            push_to_new_list(newList, curr1->data);
+            curr1 = curr1->next;
+        } else {
+            // push curr2->data to the new list;
+            push_to_new_list(newList, curr2->data);
+            curr2 = curr2->next;
+        }
+    } 
+    while (curr1) {
+        // push curr1->data to the new list
+        push_to_new_list(newList, curr1->data);
+        curr1 = curr1->next;
+    }
+    while (curr2) {
+        // push curr2->data to the new list;
+        push_to_new_list(newList, curr2->data);
+        curr2 = curr2->next;
+    }
+    return newList->head;
+}
