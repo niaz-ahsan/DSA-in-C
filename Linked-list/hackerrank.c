@@ -368,3 +368,21 @@ struct DoublyLinkedListNode * sortedInsert(struct DoublyLinkedListNode * llist, 
     }
     return llist;
 }
+
+// Problem: Reverse a doubly linked list
+// link: https://www.hackerrank.com/challenges/reverse-a-doubly-linked-list/copy-from/338412746
+
+struct DoublyLinkedListNode * reverse(struct DoublyLinkedListNode * llist) {
+    struct DoublyLinkedListNode * curr = llist;
+    struct DoublyLinkedListNode * temp = NULL;
+    struct DoublyLinkedListNode * memory = NULL;
+    while (curr) {
+        temp = curr->next;
+        curr->next = curr->prev;
+        curr->prev = temp;
+        memory = curr;
+        curr = curr->prev;
+    }
+    llist = memory;
+    return llist;
+}
