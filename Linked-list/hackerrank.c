@@ -14,6 +14,17 @@ struct SinglyLinkedListNode {
     struct SinglyLinkedListNode * next;
 };
 
+struct DoublyLinkedListNode {
+    int data;
+    struct DoublyLinkedListNode * next;
+    struct DoublyLinkedListNode * prev;
+};
+
+struct DoublyLinkedList {
+    struct DoublyLinkedListNode * head;
+    struct DoublyLinkedListNode * tail;
+};
+
 // Problem: Print the Elements of a Linked List
 // link: https://www.hackerrank.com/challenges/print-the-elements-of-a-linked-list/problem
 
@@ -320,4 +331,40 @@ int findMergeNode(struct SinglyLinkedListNode * head1, struct SinglyLinkedListNo
         curr1 = curr1->next;
     }
     return -1;
+}
+
+// Problem: Inserting a Node Into a Sorted Doubly Linked List
+// link: https://www.hackerrank.com/challenges/insert-a-node-into-a-sorted-doubly-linked-list/copy-from/338400568
+
+struct DoublyLinkedListNode * sortedInsert(struct DoublyLinkedListNode * llist, int data) {
+    struct DoublyLinkedListNode * node = (struct DoublyLinkedListNode *) malloc(sizeof(struct DoublyLinkedListNode));
+    node->data = data;
+    node->prev = NULL;
+    node->next = NULL;
+    struct DoublyLinkedListNode * curr = llist;
+    struct DoublyLinkedListNode * memory = NULL;
+    while(curr && curr->data < data) {
+        memory = curr;
+        curr = curr->next;
+    }
+    if (curr && curr->data >= data) {
+        struct DoublyLinkedListNode * prev = curr->prev;
+        if (! prev) {
+            // node sits at head
+            node->next = curr;
+            curr->prev = node;
+            llist = node;
+            return llist;
+        }
+        // node sits in between head & tail
+        prev->next = node;
+        node->prev = prev;
+        node->next = curr;
+        curr->prev = node;
+    } else {
+        // node sits at tail
+        memory->next = node;
+        node->prev = memory;
+    }
+    return llist;
 }
