@@ -7,7 +7,27 @@ struct Node {
     struct Node * right;
 };
 
+struct Stack_node {
+    struct Node * node;
+    int level;
+    struct Stack_node * next;
+};
+
+struct Stack {
+    int len;
+    struct Stack_node * head; // stack increases at the left, push at head and pop at head
+};
+
+
 void display(struct Node *, int);
+void preorder_traversal(struct Node * node);
+// ========= Stack functions =========
+void init_stack(struct Stack * st);
+void push(struct Stack * st, struct Node * node, int level);
+struct Stack_node * pop(struct Stack * st);
+void display_stack(struct Stack * st);
+
+
 
 int main(void) {
     struct Node root = {1, NULL, NULL};
@@ -26,6 +46,7 @@ int main(void) {
     third.right = &seventh;
 
     display(&root, 1);
+    preorder_traversal(&root);
     return 0;
 }
 
@@ -41,5 +62,66 @@ void display(struct Node * node, int jumps) {
         print_space(jumps);
         printf("%d\n", node->data);
         display(node->left, jumps + 1);
+    }
+}
+
+void preorder_traversal(struct Node * node) {
+    struct Stack st;
+    init_stack(&st);
+    int level = 0;
+    while (node || st.len) {
+        if (node) {
+            printf("data %d | level %d\n", node->data, level);
+            push(&st, node, level);
+            node = node->left;
+            level = level - 1;
+        } else {
+            struct Stack_node * st_node = pop(&st);
+            node = st_node->node;
+            level = st_node->level + 1;
+            node = node->right;
+        }
+    }
+}
+
+// ============= Stack implementation ==============
+void init_stack(struct Stack * st) {
+    st->head = NULL;
+    st->len = 0;
+}
+
+void push(struct Stack * st, struct Node * node, int level) {
+    // generating stack node
+    struct Stack_node * st_node = (struct Stack_node *) malloc(sizeof(struct Stack_node));
+    st_node->node = node;
+    st_node->level = level;
+    st_node->next = NULL;
+    // add it to stack's left
+    if (st->head) {
+        // stack not empty
+        st_node->next = st->head;
+        st->head = st_node;
+    } else {
+        // stack empty
+        st->head = st_node;
+    }
+    st->len++;
+}
+
+struct Stack_node * pop(struct Stack * st) {
+    if (! st->head) {
+        return NULL;
+    }
+    struct Stack_node * temp = st->head;
+    st->head = st->head->next;
+    st->len--;
+    return temp;
+}
+
+void display_stack(struct Stack * st) {
+    struct Stack_node * curr = st->head;
+    while (curr) {
+        printf("data = %d | level = %d\n", curr->node->data, curr->level);
+        curr = curr->next;
     }
 }
