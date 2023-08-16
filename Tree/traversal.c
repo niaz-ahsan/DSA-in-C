@@ -18,15 +18,31 @@ struct Stack {
     struct Stack_node * head; // stack increases at the left, push at head and pop at head
 };
 
+struct Queue {
+    struct Queue_node * head;
+    struct Queue_node * tail;
+    int len;
+};
+
+struct Queue_node {
+    struct Node * node;
+    struct Queue_node * next;
+};
+
 
 void display(struct Node *, int);
 void preorder_traversal(struct Node * node);
+void inorder_traversal(struct Node * node);
+void level_order_traversal(struct Node * node);
 // ========= Stack functions =========
 void init_stack(struct Stack * st);
 void push(struct Stack * st, struct Node * node, int level);
 struct Stack_node * pop(struct Stack * st);
 void display_stack(struct Stack * st);
-
+// ======== Queue functions ==========
+void init_queue(struct Queue * q);
+void enqueue(struct Queue * q, struct Node * node);
+struct Node * dequeue(struct Queue * q);
 
 
 int main(void) {
@@ -43,10 +59,12 @@ int main(void) {
     second.left = &fourth;
     second.right = &fifth;
     third.left = &sixth;
-    //third.right = &seventh;
+    third.right = &seventh;
 
     display(&root, 1);
     preorder_traversal(&root);
+    //inorder_traversal(&root);
+    level_order_traversal(&root);
     return 0;
 }
 
@@ -86,6 +104,7 @@ int is_top_level_node(int level, int * left_min, int * right_max, int * has_zero
 }
 
 void preorder_traversal(struct Node * node) {
+    printf("========== Preorder Traversal Top view ===========\n");
     struct Stack st;
     init_stack(&st);
     int level = 0;
@@ -108,6 +127,60 @@ void preorder_traversal(struct Node * node) {
             node = node->right;
         }
     }
+}
+
+int is_top_level_node_inorder(int level, int * right_max) {
+    if ( (level != 0) & (level > *(right_max)) ) {
+        *(right_max) = level;
+        return 1;
+    }
+    return 0;
+}
+
+void inorder_traversal(struct Node * node) {
+    printf("========== Inorder Traversal Top view ===========\n");
+    struct Node * root = node;
+    struct Stack st;
+    init_stack(&st);
+    int level = 0;
+    int right_max = -501;
+    int has_zero_visited = 0;
+    while (node || st.len) {
+        if (node) {
+            push(&st, node, level);
+            node = node->left;
+            level = level - 1;
+        } else {
+            struct Stack_node * st_node = pop(&st);
+            node = st_node->node;
+            //printf("data %d | level %d\n", node->data, st_node->level);
+            if(node == root) {
+                printf("%d | level %d\n", node->data, st_node->level);
+            } else if (is_top_level_node_inorder(st_node->level, &right_max)) {
+                printf("%d | level %d\n", node->data, st_node->level);
+            }
+            level = st_node->level + 1;
+            node = node->right;
+        }
+    }
+}
+
+void level_order_traversal(struct Node * node) {
+    printf("======= Level Order =======\n");
+    struct Queue q;
+    init_queue(&q);
+    enqueue(&q, node);
+    while (q.len) {
+        struct Node * this_node = dequeue(&q);
+        printf("%d ", this_node->data);
+        if (this_node->left) {
+            enqueue(&q, this_node->left);
+        }
+        if (this_node->right) {
+            enqueue(&q, this_node->right);
+        }
+    }
+    printf("\n");
 }
 
 // ============= Stack implementation ==============
@@ -150,4 +223,43 @@ void display_stack(struct Stack * st) {
         printf("data = %d | level = %d\n", curr->node->data, curr->level);
         curr = curr->next;
     }
+}
+
+// ============= Queue implementation ==============
+void init_queue(struct Queue * q) {
+    q->head = NULL;
+    q->tail = NULL;
+    q->len = 0;
+}
+
+void enqueue(struct Queue * q, struct Node * node) {
+    // creating the node
+    struct Queue_node * q_node = (struct Queue_node *) malloc(sizeof(struct Queue_node));
+    q_node->node = node;
+    q_node->next = NULL;
+    if (q->head) {
+        // q not empty, append the new node
+        q->tail->next = q_node;
+        q->tail = q_node;
+        q->len++;
+        return;
+    }
+    // q is empty
+    q->head = q_node;
+    q->tail = q_node;
+    q->len++;
+}
+
+struct Node * dequeue(struct Queue * q) {
+    if (q->head) {
+        // q not empty, dequeue the head
+        struct Queue_node * to_be_deleted = q->head;
+        q->head = q->head->next;
+        q->len--;
+        struct Node * ret = to_be_deleted->node;
+        free(to_be_deleted);
+        return ret;
+    }
+    // q empty
+    return NULL;
 }
