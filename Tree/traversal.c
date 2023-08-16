@@ -43,7 +43,7 @@ int main(void) {
     second.left = &fourth;
     second.right = &fifth;
     third.left = &sixth;
-    third.right = &seventh;
+    //third.right = &seventh;
 
     display(&root, 1);
     preorder_traversal(&root);
@@ -65,13 +65,39 @@ void display(struct Node * node, int jumps) {
     }
 }
 
+int is_top_level_node(int level, int * left_min, int * right_max, int * has_zero_visited) {
+    if (level < 0) {
+        if (level < *(left_min)) {
+            *(left_min) = level;
+            return 1;
+        } 
+    } else if (level > 0) {
+        if (level > *(right_max)) {
+            *(right_max) = level;
+            return 1;
+        }
+    } else {
+        if (! *(has_zero_visited)) {
+            *(has_zero_visited) = 1;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void preorder_traversal(struct Node * node) {
     struct Stack st;
     init_stack(&st);
     int level = 0;
+    int left_min = 0;
+    int right_max = 0;
+    int has_zero_visited = 0;
     while (node || st.len) {
         if (node) {
-            printf("data %d | level %d\n", node->data, level);
+            //printf("data %d | level %d\n", node->data, level);
+            if (is_top_level_node(level, &left_min, &right_max, &has_zero_visited)) {
+                printf("%d | level %d\n", node->data, level);
+            }
             push(&st, node, level);
             node = node->left;
             level = level - 1;
