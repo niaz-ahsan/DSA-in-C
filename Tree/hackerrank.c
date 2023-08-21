@@ -106,3 +106,24 @@ struct node* insert( struct node* root, int data ) {
     }
     return root;
 }
+
+// Problem: Binary Search Tree : Lowest Common Ancestor
+// link: https://www.hackerrank.com/challenges/binary-search-tree-lowest-common-ancestor/submissions/code/341992972
+
+struct node *lca( struct node *root, int v1, int v2 ) {
+    struct node * node =  root;
+    struct node * prev = root;
+    while (1) {
+        if (node->data == v1 || node->data == v2) 
+            return prev;
+        if (v1 < node->data && v2 < node->data) {
+            node = node->left;
+            prev = node;
+        } else if (v1 > node->data && v2 > node->data) {
+            node = node->right;
+            prev = node;
+        } else {
+            return node;
+        }
+    }
+}
