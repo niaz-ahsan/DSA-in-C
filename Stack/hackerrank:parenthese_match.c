@@ -1,3 +1,5 @@
+// Problem: https://www.hackerrank.com/challenges/balanced-brackets/problem
+
 #include <stdio.h>
 #include <stdlib.h>
 
